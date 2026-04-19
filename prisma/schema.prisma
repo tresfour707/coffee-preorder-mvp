@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum OrderSource {
+  ONLINE
+  OFFLINE
+}
+
+enum OrderStatus {
+  WAITING
+  PREPARING
+  READY
+  CANCELLED
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  name        String
+  description String?
+  price       Int
+  available   Boolean     @default(true)
+  category    String?
+  sortOrder   Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orderItems  OrderItem[]
+
+  @@index([available, category, sortOrder])
+}
+
+model Order {
+  id                String       @id @default(cuid())
+  publicOrderNumber Int
+  source            OrderSource
+  status            OrderStatus
+  createdAt         DateTime     @default(now())
+  confirmedAt       DateTime
+  readyAt           DateTime?
+  cancelledAt       DateTime?
+  businessDay       String
+  totalPrice        Int
+  customerName      String?
+  items             OrderItem[]
+
+  @@unique([businessDay, publicOrderNumber])
+  @@index([status, confirmedAt])
+  @@index([businessDay, confirmedAt])
+}
+
+model OrderItem {
+  id                  String   @id @default(cuid())
+  orderId             String
+  productId           String?
+  quantity            Int
+  unitPriceSnapshot   Int
+  productNameSnapshot String
+  order               Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product             Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+  @@index([productId])
+}
