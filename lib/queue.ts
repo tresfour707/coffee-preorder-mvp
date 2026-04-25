@@ -50,6 +50,22 @@ export function serializeOrderItems(items: OrderItem[]): OrderItemSummary[] {
   }));
 }
 
+function requireConfirmedOrderFields(
+  order: Pick<Order, "id" | "publicOrderNumber" | "confirmedAt">,
+) {
+  if (order.publicOrderNumber == null || order.confirmedAt == null) {
+    throw new AppError(
+      `У заказа ${order.id} нет подтверждённых данных для очереди.`,
+      500,
+    );
+  }
+
+  return {
+    publicOrderNumber: order.publicOrderNumber,
+    confirmedAt: order.confirmedAt,
+  };
+}
+
 export async function listActiveOrders(db: DbClient) {
   return db.order.findMany({
     where: {
@@ -79,13 +95,15 @@ export function serializeQueueOrder(
   order: OrderWithItems,
   activeOrderIds: string[],
 ): QueueOrder {
+  const { publicOrderNumber, confirmedAt } = requireConfirmedOrderFields(order);
+
   return {
     id: order.id,
-    publicOrderNumber: order.publicOrderNumber,
+    publicOrderNumber,
     source: order.source,
     status: getVisibleStatus(order, activeOrderIds),
     totalPrice: order.totalPrice,
-    confirmedAt: order.confirmedAt.toISOString(),
+    confirmedAt: confirmedAt.toISOString(),
     items: serializeOrderItems(order.items),
   };
 }
@@ -94,18 +112,19 @@ export function serializeOrderDetails(
   order: OrderWithItems,
   activeOrderIds: string[],
 ): OrderDetails {
+  const { publicOrderNumber, confirmedAt } = requireConfirmedOrderFields(order);
   const visibleStatus = getVisibleStatus(order, activeOrderIds);
   const queueIndex = activeOrderIds.indexOf(order.id);
   const ordersAhead = queueIndex >= 0 ? queueIndex : 0;
 
   return {
     id: order.id,
-    publicOrderNumber: order.publicOrderNumber,
+    publicOrderNumber,
     source: order.source,
     status: visibleStatus,
-    businessDay: order.businessDay,
+    businessDay: order.businessDay ?? "",
     totalPrice: order.totalPrice,
-    confirmedAt: order.confirmedAt.toISOString(),
+    confirmedAt: confirmedAt.toISOString(),
     items: serializeOrderItems(order.items),
     ordersAhead,
     canCancel:

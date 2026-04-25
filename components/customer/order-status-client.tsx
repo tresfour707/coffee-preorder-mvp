@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import { AuthActions } from "@/components/auth/auth-actions";
 import { PageShell } from "@/components/ui/page-shell";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { formatOrderNumber } from "@/lib/format";
@@ -11,13 +12,17 @@ import { formatMoney } from "@/lib/money";
 import { sourceLabels } from "@/lib/labels";
 import { ORDER_STATUS_POLL_INTERVAL_MS } from "@/lib/constants";
 import { usePolling } from "@/lib/use-polling";
-import type { OrderDetails } from "@/lib/types";
+import type { OrderDetails, ViewerSummary } from "@/lib/types";
 
 type OrderStatusClientProps = {
   initialOrder: OrderDetails;
+  viewer: ViewerSummary;
 };
 
-export function OrderStatusClient({ initialOrder }: OrderStatusClientProps) {
+export function OrderStatusClient({
+  initialOrder,
+  viewer,
+}: OrderStatusClientProps) {
   const [order, setOrder] = useState(initialOrder);
   const [error, setError] = useState<string | null>(null);
   const [isCancelling, setIsCancelling] = useState(false);
@@ -86,12 +91,15 @@ export function OrderStatusClient({ initialOrder }: OrderStatusClientProps) {
       title={formatOrderNumber(order.publicOrderNumber)}
       description="Статус обновляется автоматически каждые несколько секунд. Очередь общая для онлайн-заказов и заказов, оформленных на кассе."
       actions={
-        <Link
-          href="/menu"
-          className="inline-flex rounded-full border border-stone-300 bg-white px-5 py-3 text-sm font-semibold text-stone-700 transition hover:border-stone-400 hover:bg-stone-50"
-        >
-          Новый заказ
-        </Link>
+        <>
+          <Link
+            href="/menu"
+            className="inline-flex rounded-full border border-stone-300 bg-white px-5 py-3 text-sm font-semibold text-stone-700 transition hover:border-stone-400 hover:bg-stone-50"
+          >
+            Новый заказ
+          </Link>
+          <AuthActions viewer={viewer} />
+        </>
       }
     >
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
@@ -115,7 +123,7 @@ export function OrderStatusClient({ initialOrder }: OrderStatusClientProps) {
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               <div className="rounded-3xl bg-stone-900 p-5 text-white">
                 <p className="label-muted text-stone-300">Перед вами</p>
-                <p className="mt-3 text-5xl font-semibold">
+                <p className="mt-3 text-4xl font-semibold md:text-5xl">
                   {order.status === "CANCELLED" ? "-" : order.ordersAhead}
                 </p>
               </div>

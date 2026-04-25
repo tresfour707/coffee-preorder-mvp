@@ -6,6 +6,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { PageShell } from "@/components/ui/page-shell";
 import { QuantityControl } from "@/components/ui/quantity-control";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { StaffSignOutButton } from "@/components/staff/staff-sign-out-button";
 import {
   addProductToCart,
   decrementCartItem,
@@ -78,7 +79,7 @@ export function CashierClient({ products, initialQueue }: CashierClientProps) {
         throw new Error(
           "error" in data && data.error
             ? data.error
-            : "Не удалось подтвердить заказ на кассе.",
+            : "Не удалось добавить очный заказ в общую очередь.",
         );
       }
 
@@ -89,7 +90,7 @@ export function CashierClient({ products, initialQueue }: CashierClientProps) {
       setError(
         requestError instanceof Error
           ? requestError.message
-          : "Не удалось подтвердить заказ на кассе.",
+          : "Не удалось добавить очный заказ в общую очередь.",
       );
     } finally {
       setIsSubmitting(false);
@@ -128,9 +129,12 @@ export function CashierClient({ products, initialQueue }: CashierClientProps) {
 
   return (
     <PageShell
-      eyebrow="Касса"
-      title="Counter POS"
-      description="Быстрое оформление офлайн-заказов. После подтверждения они сразу попадают в ту же производственную очередь, что и online-заказы."
+      eyebrow="Staff demo"
+      title="Добавление очного заказа"
+      description="Это не замена реальной кассе кофейни. Экран показывает demo-логику: уже принятый очный заказ тоже может попасть в ту же производственную очередь, что и online-заказ."
+      actions={
+        <StaffSignOutButton className="inline-flex rounded-full border border-stone-300 bg-white px-5 py-3 text-sm font-semibold text-stone-700 transition hover:border-stone-400 hover:bg-stone-50 disabled:cursor-wait disabled:opacity-60" />
+      }
     >
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.25fr)_420px]">
         <section className="space-y-8">
@@ -182,7 +186,7 @@ export function CashierClient({ products, initialQueue }: CashierClientProps) {
               <div>
                 <p className="label-muted">Текущая корзина</p>
                 <h2 className="mt-2 text-2xl font-semibold text-stone-900">
-                  Заказ на кассе
+                  Очный заказ
                 </h2>
               </div>
               <p className="text-lg font-semibold text-stone-900">
@@ -192,7 +196,7 @@ export function CashierClient({ products, initialQueue }: CashierClientProps) {
 
             {cart.length === 0 ? (
               <p className="mt-6 rounded-2xl bg-stone-50 p-4 text-sm text-stone-600">
-                Корзина пуста. Выберите позиции слева, чтобы собрать заказ клиента.
+                Корзина пуста. Выберите позиции слева, чтобы сымитировать уже принятый заказ со стойки.
               </p>
             ) : (
               <div className="mt-6 space-y-4">
@@ -265,13 +269,12 @@ export function CashierClient({ products, initialQueue }: CashierClientProps) {
               disabled={cart.length === 0 || isSubmitting}
               className="mt-6 w-full rounded-full bg-stone-900 px-5 py-4 text-sm font-semibold text-white transition hover:bg-stone-800 disabled:cursor-not-allowed disabled:bg-stone-300"
             >
-              {isSubmitting ? "Подтверждаем…" : "Confirm"}
+              {isSubmitting ? "Добавляем…" : "Добавить очный заказ в очередь"}
             </button>
 
             {lastCreatedOrder ? (
               <div className="mt-4 rounded-2xl bg-emerald-50 p-4 text-sm text-emerald-800">
-                Заказ {formatOrderNumber(lastCreatedOrder.publicOrderNumber)} создан и
-                добавлен в общую очередь.
+                Очный заказ {formatOrderNumber(lastCreatedOrder.publicOrderNumber)} добавлен в общую очередь.
               </div>
             ) : null}
           </section>

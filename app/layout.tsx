@@ -4,8 +4,9 @@ import type { ReactNode } from "react";
 import "@/app/globals.css";
 
 export const metadata: Metadata = {
-  title: "Coffee Queue MVP",
-  description: "Unified coffee pre-order queue for customer, cashier, and barista.",
+  title: "Coffee Queue Demo",
+  description:
+    "Демо единой очереди для предзаказа кофе, очных заказов и экрана бариста.",
 };
 
 export default function RootLayout({

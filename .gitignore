@@ -1,5 +1,6 @@
 .next
 node_modules
+.idea
 *.log
 .env
 .env.local

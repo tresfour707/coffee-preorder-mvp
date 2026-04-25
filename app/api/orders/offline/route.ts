@@ -1,15 +1,16 @@
 import { NextResponse } from "next/server";
 
 import { toErrorResponse } from "@/lib/api-response";
-import { createOrder } from "@/lib/orders";
+import { createOfflineOrder } from "@/lib/orders";
+import { requireStaffSession } from "@/lib/staff-auth";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   try {
+    await requireStaffSession();
     const body = await request.json();
-    const order = await createOrder({
-      source: "OFFLINE",
+    const order = await createOfflineOrder({
       items: Array.isArray(body?.items) ? body.items : [],
     });
 

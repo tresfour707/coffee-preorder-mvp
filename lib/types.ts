@@ -1,5 +1,18 @@
 export type OrderSource = "ONLINE" | "OFFLINE";
-export type OrderStatus = "WAITING" | "PREPARING" | "READY" | "CANCELLED";
+export type OrderStatus =
+  | "DRAFT"
+  | "WAITING"
+  | "PREPARING"
+  | "READY"
+  | "CANCELLED";
+export type PaymentStatus = "PENDING" | "SUCCEEDED" | "FAILED" | "CANCELLED";
+export type PaymentMethod = "DEMO_CARD" | "DEMO_SBP";
+
+export type ViewerSummary = {
+  id: string;
+  name: string;
+  email: string;
+};
 
 export type ProductSummary = {
   id: string;
@@ -43,6 +56,34 @@ export type OrderDetails = {
   items: OrderItemSummary[];
   ordersAhead: number;
   canCancel: boolean;
+};
+
+export type UserOrderSummary = {
+  id: string;
+  publicOrderNumber: number;
+  status: OrderStatus;
+  totalPrice: number;
+  confirmedAt: string;
+  source: OrderSource;
+  ordersAhead: number;
+};
+
+export type DemoPaymentDetails = {
+  paymentId: string;
+  orderId: string;
+  amount: number;
+  method: PaymentMethod;
+  status: PaymentStatus;
+  source: OrderSource;
+  customerName: string | null;
+  customerEmail: string | null;
+  items: OrderItemSummary[];
+};
+
+export type DemoPaymentResolution = {
+  paymentId: string;
+  status: PaymentStatus;
+  order: OrderDetails | null;
 };
 
 export type QueueOrder = {

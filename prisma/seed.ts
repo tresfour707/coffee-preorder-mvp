@@ -63,7 +63,10 @@ const menu = [
 
 async function main() {
   await prisma.orderItem.deleteMany();
+  await prisma.payment.deleteMany();
   await prisma.order.deleteMany();
+  await prisma.session.deleteMany();
+  await prisma.user.deleteMany();
   await prisma.product.deleteMany();
 
   await prisma.product.createMany({

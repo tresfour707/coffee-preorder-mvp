@@ -5,6 +5,7 @@ import { useState } from "react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageShell } from "@/components/ui/page-shell";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { StaffSignOutButton } from "@/components/staff/staff-sign-out-button";
 import { STAFF_POLL_INTERVAL_MS } from "@/lib/constants";
 import { formatTime } from "@/lib/business-day";
 import { formatOrderNumber } from "@/lib/format";
@@ -80,8 +81,11 @@ export function BaristaClient({ initialQueue }: BaristaClientProps) {
   return (
     <PageShell
       eyebrow="Бариста"
-      title="Production Monitor"
-      description="Один экран для общей очереди. Бариста видит текущий заказ сверху и следующие подтверждённые заказы ниже, без разделения на online и counter."
+      title="Единая очередь заказов"
+      description="Один экран для общей очереди. Бариста видит текущий заказ сверху и следующие подтверждённые заказы ниже, без разделения на online и offline."
+      actions={
+        <StaffSignOutButton className="inline-flex rounded-full border border-stone-300 bg-white px-5 py-3 text-sm font-semibold text-stone-700 transition hover:border-stone-400 hover:bg-stone-50 disabled:cursor-wait disabled:opacity-60" />
+      }
     >
       {error ? (
         <div className="mb-6 rounded-2xl bg-red-50 p-4 text-sm text-red-700">
@@ -143,7 +147,7 @@ export function BaristaClient({ initialQueue }: BaristaClientProps) {
                 disabled={isSubmitting}
                 className="mt-8 w-full rounded-full bg-brand-500 px-5 py-4 text-base font-semibold text-white transition hover:bg-brand-600 disabled:cursor-wait disabled:bg-brand-300"
               >
-                {isSubmitting ? "Обновляем…" : "Mark current order as Ready"}
+                {isSubmitting ? "Обновляем…" : "Отметить текущий заказ как Ready"}
               </button>
             </div>
           </div>

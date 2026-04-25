@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { AppError } from "@/lib/app-error";
 import { toErrorResponse } from "@/lib/api-response";
+import { requireCurrentUser } from "@/lib/auth";
 import { getOrderDetails } from "@/lib/orders";
 
 export const dynamic = "force-dynamic";
@@ -12,7 +13,8 @@ export async function GET(
 ) {
   try {
     const { lookup } = await context.params;
-    const order = await getOrderDetails(lookup);
+    const viewer = await requireCurrentUser();
+    const order = await getOrderDetails(lookup, viewer.id);
 
     if (!order) {
       throw new AppError("Заказ не найден.", 404);

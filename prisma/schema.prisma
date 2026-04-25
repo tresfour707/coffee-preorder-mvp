@@ -13,10 +13,47 @@ enum OrderSource {
 }
 
 enum OrderStatus {
+  DRAFT
   WAITING
   PREPARING
   READY
   CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  DEMO_CARD
+  DEMO_SBP
+}
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  orders       Order[]
+  sessions     Session[]
+
+  @@index([createdAt])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
 }
 
 model Product {
@@ -36,21 +73,25 @@ model Product {
 
 model Order {
   id                String       @id @default(cuid())
-  publicOrderNumber Int
+  publicOrderNumber Int?
+  publicOrderKey    String?      @unique
   source            OrderSource
   status            OrderStatus
   createdAt         DateTime     @default(now())
-  confirmedAt       DateTime
+  confirmedAt       DateTime?
   readyAt           DateTime?
   cancelledAt       DateTime?
-  businessDay       String
+  businessDay       String?
   totalPrice        Int
   customerName      String?
+  userId            String?
+  user              User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  payment           Payment?
   items             OrderItem[]
 
-  @@unique([businessDay, publicOrderNumber])
   @@index([status, confirmedAt])
   @@index([businessDay, confirmedAt])
+  @@index([userId, createdAt])
 }
 
 model OrderItem {
@@ -65,4 +106,21 @@ model OrderItem {
 
   @@index([orderId])
   @@index([productId])
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  orderId      String        @unique
+  provider     String        @default("DEMO")
+  method       PaymentMethod?
+  status       PaymentStatus @default(PENDING)
+  amount       Int
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  completedAt  DateTime?
+  failedAt     DateTime?
+  cancelledAt  DateTime?
+  order        Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([status, createdAt])
 }
