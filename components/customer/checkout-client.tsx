@@ -4,11 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { AuthActions } from "@/components/auth/auth-actions";
-import { CustomerTopNav } from "@/components/customer/customer-top-nav";
-import { PublicQueueBanner } from "@/components/customer/public-queue-banner";
+import { CustomerMobileShell } from "@/components/customer/customer-mobile-shell";
 import { EmptyState } from "@/components/ui/empty-state";
-import { PageShell } from "@/components/ui/page-shell";
 import {
   getCartOwnerKey,
   selectCartByOwner,
@@ -91,192 +88,209 @@ export function CheckoutClient({
 
   if (!isMounted) {
     return (
-      <PageShell
-        eyebrow="Оформление"
-        title="Подготовка оплаты"
-        description="Подгружаем корзину текущего аккаунта перед демо-оплатой."
-        subnav={<CustomerTopNav viewer={viewer} />}
-        banner={<PublicQueueBanner initialSummary={initialQueueSummary} />}
-        actions={<AuthActions viewer={viewer} />}
+      <CustomerMobileShell
+        viewer={viewer}
+        queueSummary={initialQueueSummary}
+        showBottomNav={false}
+        className="pb-40"
+        header={
+          <div>
+            <p className="kicker">Checkout</p>
+            <h1 className="mt-2 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
+              Подготавливаем оплату
+            </h1>
+          </div>
+        }
       >
-        <div className="surface p-8 text-sm text-stone-600">
-          Загружаем корзину пользователя {viewer.name}…
-        </div>
-      </PageShell>
+        <div className="app-card p-6 text-sm text-stone-600">Загружаем корзину…</div>
+      </CustomerMobileShell>
     );
   }
 
   if (items.length === 0) {
     return (
-      <PageShell
-        eyebrow="Оформление"
-        title="Оформление"
-        description="Сначала соберите заказ в меню, а потом вернитесь к демо-оплате."
-        subnav={<CustomerTopNav viewer={viewer} />}
-        banner={<PublicQueueBanner initialSummary={initialQueueSummary} />}
-        actions={<AuthActions viewer={viewer} />}
+      <CustomerMobileShell
+        viewer={viewer}
+        queueSummary={initialQueueSummary}
+        showBottomNav={false}
+        header={
+          <div>
+            <p className="kicker">Checkout</p>
+            <h1 className="mt-2 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
+              Нечего оформлять
+            </h1>
+          </div>
+        }
       >
         <EmptyState
           title="Корзина пустая"
-          description="В оформлении пока нечего оплачивать. Добавьте напитки и закуски в меню."
+          description="Сначала соберите заказ в меню, а потом возвращайтесь к оплате."
           action={
-            <Link
-              href="/menu"
-              className="inline-flex rounded-full bg-stone-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-stone-800"
-            >
+            <Link href="/menu" className="btn-primary">
               Вернуться в меню
             </Link>
           }
         />
-      </PageShell>
+      </CustomerMobileShell>
     );
   }
 
   return (
-    <PageShell
-      className="pb-28 md:pb-32 lg:pb-8"
-      eyebrow="Оформление"
-      title="Демо-оплата"
-      description="Здесь мы честно показываем будущий шаг оплаты. В рабочей версии вместо него будет реальный сервис оплаты."
-      subnav={<CustomerTopNav viewer={viewer} />}
-      banner={<PublicQueueBanner initialSummary={initialQueueSummary} />}
-      actions={<AuthActions viewer={viewer} />}
+    <CustomerMobileShell
+      viewer={viewer}
+      queueSummary={initialQueueSummary}
+      showBottomNav={false}
+      className="pb-44"
+      header={
+        <div>
+          <p className="kicker">Checkout</p>
+          <h1 className="mt-2 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
+            Подтвердите заказ
+          </h1>
+          <p className="mt-3 max-w-[320px] text-sm leading-6 text-stone-600">
+            Это финальный шаг перед очередью: проверьте состав, выберите способ оплаты
+            и переходите к подтверждению.
+          </p>
+        </div>
+      }
     >
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
-        <section className="space-y-4">
-          <div className="surface p-6">
-            <p className="label-muted">Аккаунт</p>
-            <h2 className="mt-2 text-2xl font-semibold text-stone-900">
-              Плательщик
-            </h2>
-            <div className="mt-5 rounded-3xl bg-stone-50 p-5">
-              <p className="text-lg font-semibold text-stone-900">{viewer.name}</p>
-              <p className="mt-1 text-sm text-stone-600">{viewer.email}</p>
-            </div>
+      <div className="space-y-4">
+        <section className="app-card p-5">
+          <p className="kicker">Аккаунт</p>
+          <div className="mt-3 rounded-[24px] bg-stone-50 p-4">
+            <p className="text-xl font-semibold tracking-tight text-stone-950">
+              {viewer.name}
+            </p>
+            <p className="mt-1 text-sm text-stone-500">{viewer.email}</p>
           </div>
-
-          <div className="surface p-6">
-            <p className="label-muted">Способ оплаты</p>
-            <h2 className="mt-2 text-2xl font-semibold text-stone-900">
-              Выберите сценарий оплаты
-            </h2>
-            <div className="mt-5 grid gap-4 md:grid-cols-2">
-              <label className="rounded-3xl border border-stone-200 bg-white p-5 transition hover:border-stone-400">
-                <input
-                  type="radio"
-                  name="payment-method"
-                  value="DEMO_CARD"
-                  checked={method === "DEMO_CARD"}
-                  onChange={() => setMethod("DEMO_CARD")}
-                  className="sr-only"
-                />
-                <p className="text-lg font-semibold text-stone-900">Демо-карта</p>
-                <p className="mt-2 text-sm leading-6 text-stone-600">
-                  Имитирует обычную оплату банковской картой через отдельный экран оплаты.
-                </p>
-              </label>
-
-              <label className="rounded-3xl border border-stone-200 bg-white p-5 transition hover:border-stone-400">
-                <input
-                  type="radio"
-                  name="payment-method"
-                  value="DEMO_SBP"
-                  checked={method === "DEMO_SBP"}
-                  onChange={() => setMethod("DEMO_SBP")}
-                  className="sr-only"
-                />
-                <p className="text-lg font-semibold text-stone-900">Демо-СБП</p>
-                <p className="mt-2 text-sm leading-6 text-stone-600">
-                  Имитирует оплату через СБП. Нужна только для показа будущего сценария.
-                </p>
-              </label>
-            </div>
-          </div>
-
-          {paymentNotice === "FAILED" ? (
-            <div className="rounded-3xl bg-red-50 p-5 text-sm leading-6 text-red-700">
-              Демо-оплата завершилась с ошибкой. Заказ не попал в очередь, корзина сохранена. Можно попробовать ещё раз.
-            </div>
-          ) : null}
-
-          {paymentNotice === "CANCELLED" ? (
-            <div className="rounded-3xl bg-amber-50 p-5 text-sm leading-6 text-amber-800">
-              Демо-оплата была отменена. Заказ не попал в очередь, корзина сохранена.
-            </div>
-          ) : null}
         </section>
 
-        <aside className="surface h-fit p-6 lg:sticky lg:top-6">
-          <p className="label-muted">Итог</p>
-          <h2 className="mt-2 text-2xl font-semibold text-stone-900">
-            Перед оплатой
-          </h2>
-
-          <dl className="mt-6 space-y-3 text-sm text-stone-600">
-            <div className="flex items-center justify-between">
-              <dt>Позиции</dt>
-              <dd className="font-semibold text-stone-900">{summary.itemsCount}</dd>
+        <section className="app-card p-5">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <p className="kicker">Оплата</p>
+              <h2 className="mt-2 text-[30px] font-semibold leading-[0.98] tracking-tight text-stone-950">
+                Выберите сценарий
+              </h2>
             </div>
-            <div className="flex items-center justify-between">
-              <dt>Источник</dt>
-              <dd className="font-semibold text-stone-900">Онлайн</dd>
+            <p className="text-sm text-stone-500">Сумма {formatMoney(summary.totalPrice)}</p>
+          </div>
+
+          <div className="mt-4 space-y-3">
+            <button
+              type="button"
+              onClick={() => setMethod("DEMO_CARD")}
+              className={`w-full rounded-[28px] border p-4 text-left transition ${
+                method === "DEMO_CARD"
+                  ? "border-stone-950 bg-stone-950 text-white"
+                  : "border-stone-200 bg-stone-50 text-stone-900"
+              }`}
+            >
+              <p className="text-lg font-semibold">Демо-карта</p>
+              <p className={`mt-2 text-sm leading-6 ${method === "DEMO_CARD" ? "text-stone-300" : "text-stone-600"}`}>
+                Похоже на обычную оплату банковской картой через отдельный экран.
+              </p>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setMethod("DEMO_SBP")}
+              className={`w-full rounded-[28px] border p-4 text-left transition ${
+                method === "DEMO_SBP"
+                  ? "border-stone-950 bg-stone-950 text-white"
+                  : "border-stone-200 bg-stone-50 text-stone-900"
+              }`}
+            >
+              <p className="text-lg font-semibold">Демо-СБП</p>
+              <p className={`mt-2 text-sm leading-6 ${method === "DEMO_SBP" ? "text-stone-300" : "text-stone-600"}`}>
+                Похоже на мобильную оплату через СБП. Используется только для demo.
+              </p>
+            </button>
+          </div>
+        </section>
+
+        <section className="app-card p-5">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <p className="kicker">Состав заказа</p>
+              <h2 className="mt-2 text-[30px] font-semibold leading-[0.98] tracking-tight text-stone-950">
+                Что вы берёте
+              </h2>
             </div>
-            <div className="flex items-center justify-between">
-              <dt>Аккаунт</dt>
-              <dd className="font-semibold text-stone-900">{viewer.name}</dd>
-            </div>
-            <div className="flex items-center justify-between text-base">
-              <dt className="font-medium text-stone-700">Итого</dt>
-              <dd className="text-xl font-semibold text-stone-900">
-                {formatMoney(summary.totalPrice)}
-              </dd>
-            </div>
-          </dl>
+            <p className="text-sm text-stone-500">{summary.itemsCount} позиций</p>
+          </div>
 
-          <p className="mt-6 rounded-2xl bg-brand-50 p-4 text-sm leading-6 text-brand-900">
-            В очередь заказ попадёт только после `Success` на следующем экране.
-          </p>
+          <div className="mt-4 space-y-3">
+            {items.map((item) => (
+              <div key={item.productId} className="rounded-[24px] bg-stone-50 px-4 py-3">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-semibold text-stone-900">
+                      {item.quantity} × {item.name}
+                    </p>
+                    <p className="mt-1 text-sm text-stone-500">
+                      {formatMoney(item.price)} за единицу
+                    </p>
+                  </div>
+                  <p className="text-sm font-semibold text-stone-900">
+                    {formatMoney(item.quantity * item.price)}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
 
-          {error ? (
-            <p className="mt-4 rounded-2xl bg-red-50 p-4 text-sm text-red-700">
-              {error}
-            </p>
-          ) : null}
+        {paymentNotice === "FAILED" ? (
+          <div className="rounded-[28px] bg-red-50 p-4 text-sm leading-6 text-red-700">
+            Демо-оплата завершилась с ошибкой. Корзина сохранена, можно попробовать ещё раз.
+          </div>
+        ) : null}
 
-          <button
-            type="button"
-            onClick={handleStartDemoPayment}
-            disabled={isSubmitting}
-            className="mt-6 w-full rounded-full bg-stone-900 px-5 py-4 text-sm font-semibold text-white transition hover:bg-stone-800 disabled:cursor-wait disabled:bg-stone-400"
-          >
-            {isSubmitting ? "Открываем…" : paymentNotice ? "Попробовать оплатить ещё раз" : "Открыть демо-оплату"}
-          </button>
+        {paymentNotice === "CANCELLED" ? (
+          <div className="rounded-[28px] bg-amber-50 p-4 text-sm leading-6 text-amber-800">
+            Демо-оплата была отменена. Состав заказа остался в корзине.
+          </div>
+        ) : null}
 
-          <Link
-            href="/cart"
-            className="mt-3 inline-flex w-full justify-center rounded-full border border-stone-300 bg-white px-5 py-4 text-sm font-semibold text-stone-700 transition hover:border-stone-400 hover:bg-stone-50"
-          >
-            Вернуться в корзину
-          </Link>
-        </aside>
+        {error ? (
+          <div className="rounded-[28px] bg-red-50 p-4 text-sm leading-6 text-red-700">
+            {error}
+          </div>
+        ) : null}
       </div>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-4 z-20 px-4 lg:hidden">
-        <div className="pointer-events-auto mx-auto flex max-w-xl items-center justify-between rounded-[1.75rem] bg-stone-900 px-4 py-3 text-white shadow-2xl">
-          <div>
-            <p className="text-sm text-stone-300">К оплате</p>
-            <p className="text-base font-semibold">{formatMoney(summary.totalPrice)}</p>
+      <div className="pointer-events-none fixed inset-x-0 bottom-4 z-30 px-4">
+        <div className="floating-bar pointer-events-auto mx-auto w-full max-w-[398px] p-3">
+          <div className="flex items-center justify-between gap-4 px-1 pb-3">
+            <div>
+              <p className="text-sm text-stone-500">К оплате</p>
+              <p className="mt-1 text-lg font-semibold tracking-tight text-stone-950">
+                {formatMoney(summary.totalPrice)}
+              </p>
+            </div>
+            <Link
+              href="/cart"
+              className="rounded-full border border-stone-200 px-4 py-2.5 text-sm font-semibold text-stone-700"
+            >
+              Назад
+            </Link>
           </div>
+
           <button
             type="button"
             onClick={handleStartDemoPayment}
             disabled={isSubmitting}
-            className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-stone-900 disabled:cursor-wait disabled:opacity-60"
+            className="w-full rounded-full bg-stone-950 px-5 py-4 text-sm font-semibold text-white transition disabled:cursor-wait disabled:bg-stone-300"
           >
-            {isSubmitting ? "Открываем…" : "Оплатить"}
+            {isSubmitting
+              ? "Открываем оплату…"
+              : paymentNotice
+                ? "Попробовать ещё раз"
+                : "Перейти к оплате"}
           </button>
         </div>
       </div>
-    </PageShell>
+    </CustomerMobileShell>
   );
 }

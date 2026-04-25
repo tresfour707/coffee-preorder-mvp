@@ -3,11 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { AuthActions } from "@/components/auth/auth-actions";
-import { CustomerTopNav } from "@/components/customer/customer-top-nav";
-import { PublicQueueBanner } from "@/components/customer/public-queue-banner";
+import { CustomerMobileShell } from "@/components/customer/customer-mobile-shell";
 import { EmptyState } from "@/components/ui/empty-state";
-import { PageShell } from "@/components/ui/page-shell";
 import { QuantityControl } from "@/components/ui/quantity-control";
 import { getCartSummary } from "@/lib/cart";
 import {
@@ -22,6 +19,14 @@ type CartClientProps = {
   viewer: ViewerSummary | null;
   initialQueueSummary: PublicQueueSummary;
 };
+
+function CartStamp({ label }: { label: string }) {
+  return (
+    <div className="flex h-16 w-16 items-center justify-center rounded-[22px] bg-[#f3d7b5] text-lg font-semibold tracking-tight text-stone-900">
+      {label.slice(0, 2).toUpperCase()}
+    </div>
+  );
+}
 
 export function CartClient({
   viewer,
@@ -45,75 +50,114 @@ export function CartClient({
 
   if (!isMounted) {
     return (
-      <PageShell
-        eyebrow={viewer ? "Клиент" : "Гость"}
-        title="Корзина"
-        description="Проверяем локальную корзину перед checkout."
-        subnav={<CustomerTopNav viewer={viewer} />}
-        banner={<PublicQueueBanner initialSummary={initialQueueSummary} />}
-        actions={<AuthActions viewer={viewer} />}
+      <CustomerMobileShell
+        viewer={viewer}
+        queueSummary={initialQueueSummary}
+        header={
+          <div>
+            <p className="kicker">Корзина</p>
+            <h1 className="mt-2 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
+              Загружаем ваш заказ
+            </h1>
+          </div>
+        }
       >
-        <div className="surface p-8 text-sm text-stone-600">Загрузка корзины…</div>
-      </PageShell>
+        <div className="app-card p-6 text-sm text-stone-600">Загрузка корзины…</div>
+      </CustomerMobileShell>
     );
   }
 
   if (items.length === 0) {
     return (
-      <PageShell
-        eyebrow={viewer ? "Клиент" : "Гость"}
-        title="Корзина"
-        description="Добавьте напитки или выпечку в заказ, а затем переходите к checkout."
-        subnav={<CustomerTopNav viewer={viewer} />}
-        banner={<PublicQueueBanner initialSummary={initialQueueSummary} />}
-        actions={<AuthActions viewer={viewer} />}
+      <CustomerMobileShell
+        viewer={viewer}
+        queueSummary={initialQueueSummary}
+        header={
+          <div>
+            <p className="kicker">Корзина</p>
+            <h1 className="mt-2 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
+              Пока пусто
+            </h1>
+            <p className="mt-3 max-w-[320px] text-sm leading-6 text-stone-600">
+              Вернитесь в меню, откройте нужный товар и добавьте его через product
+              sheet.
+            </p>
+          </div>
+        }
       >
         <EmptyState
-          title="Корзина пока пустая"
-          description="Вернитесь в меню, выберите позиции и после оплаты заказ попадёт в общую очередь кофейни."
+          title="Заказ ещё не собран"
+          description="Как только в корзине появятся позиции, здесь можно будет удобно поменять количество и перейти к оформлению."
           action={
-            <Link
-              href="/menu"
-              className="inline-flex rounded-full bg-stone-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-stone-800"
-            >
+            <Link href="/menu" className="btn-primary">
               Вернуться в меню
             </Link>
           }
         />
-      </PageShell>
+      </CustomerMobileShell>
     );
   }
 
   return (
-    <PageShell
-      className="pb-28 md:pb-32 lg:pb-8"
-      eyebrow={viewer ? "Клиент" : "Гость"}
-      title="Корзина"
-      description="Сначала проверьте состав заказа, затем перейдите к оформлению. В очередь заказ попадёт только после успешной демо-оплаты."
-      subnav={<CustomerTopNav viewer={viewer} />}
-      banner={<PublicQueueBanner initialSummary={initialQueueSummary} />}
-      actions={<AuthActions viewer={viewer} />}
+    <CustomerMobileShell
+      viewer={viewer}
+      queueSummary={initialQueueSummary}
+      header={
+        <div>
+          <p className="kicker">Корзина</p>
+          <h1 className="mt-2 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
+            Проверьте заказ
+          </h1>
+          <p className="mt-3 max-w-[320px] text-sm leading-6 text-stone-600">
+            Здесь удобно менять количество, удалять позиции и переходить к
+            оформлению.
+          </p>
+        </div>
+      }
     >
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
-        <section className="space-y-4">
-          {items.map((item) => (
-            <article
-              key={item.productId}
-              className="surface flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between md:p-5"
-            >
-              <div>
-                <h2 className="text-xl font-semibold text-stone-900">
+      <div className="space-y-4">
+        {items.map((item) => (
+          <article key={item.productId} className="app-card p-4">
+            <div className="flex items-start gap-4">
+              <CartStamp label={item.name} />
+
+              <div className="min-w-0 flex-1">
+                {item.category ? (
+                  <p className="kicker">{item.category}</p>
+                ) : null}
+                <h2 className="mt-2 text-[24px] font-semibold leading-[0.98] tracking-tight text-stone-950">
                   {item.name}
                 </h2>
                 {item.description ? (
-                  <p className="mt-1 text-sm text-stone-600">{item.description}</p>
+                  <p className="mt-2 text-sm leading-6 text-stone-500">
+                    {item.description}
+                  </p>
                 ) : null}
-                <p className="mt-3 text-sm font-medium text-stone-500">
-                  {formatMoney(item.price)} за единицу
-                </p>
-              </div>
 
-              <div className="flex items-center justify-between gap-4 sm:flex-col sm:items-end">
+                <div className="mt-4 flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-sm text-stone-500">
+                      {formatMoney(item.price)} за единицу
+                    </p>
+                    <p className="mt-1 text-lg font-semibold tracking-tight text-stone-950">
+                      {formatMoney(item.price * item.quantity)}
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => removeProduct(ownerKey, item.productId)}
+                    className="rounded-full border border-stone-200 px-4 py-2 text-sm font-semibold text-stone-600"
+                  >
+                    Удалить
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 rounded-[24px] bg-stone-50 p-3">
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-sm font-medium text-stone-500">Количество</p>
                 <QuantityControl
                   quantity={item.quantity}
                   onIncrement={() =>
@@ -133,75 +177,40 @@ export function CartClient({
                   }
                   onDecrement={() => decrementProduct(ownerKey, item.productId)}
                 />
-                <div className="text-right">
-                  <p className="text-lg font-semibold text-stone-900">
-                    {formatMoney(item.price * item.quantity)}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => removeProduct(ownerKey, item.productId)}
-                    className="mt-2 text-sm font-medium text-stone-500 transition hover:text-stone-900"
-                  >
-                    Удалить
-                  </button>
-                </div>
               </div>
-            </article>
-          ))}
-        </section>
-
-        <aside className="surface h-fit p-6 lg:sticky lg:top-6">
-          <p className="label-muted">Итог</p>
-          <h2 className="mt-2 text-2xl font-semibold text-stone-900">
-            Перед checkout
-          </h2>
-
-          <dl className="mt-6 space-y-3 text-sm text-stone-600">
-            <div className="flex items-center justify-between">
-              <dt>Позиции</dt>
-              <dd className="font-semibold text-stone-900">{summary.itemsCount}</dd>
             </div>
-            <div className="flex items-center justify-between">
-              <dt>Источник</dt>
-              <dd className="font-semibold text-stone-900">Онлайн</dd>
-            </div>
-            <div className="flex items-center justify-between text-base">
-              <dt className="font-medium text-stone-700">Итого</dt>
-              <dd className="text-xl font-semibold text-stone-900">
-                {formatMoney(summary.totalPrice)}
-              </dd>
-            </div>
-          </dl>
-
-          <p className="mt-6 rounded-2xl bg-brand-50 p-4 text-sm leading-6 text-brand-900">
-            {viewer
-              ? "Вы уже вошли в аккаунт. На следующем шаге откроется оформление и демо-оплата."
-              : "Для демо-оплаты нужен аккаунт. Если вы ещё не вошли, приложение переведёт вас на экран входа."}
-          </p>
-
-          <Link
-            href="/checkout"
-            className="mt-6 inline-flex w-full justify-center rounded-full bg-stone-900 px-5 py-4 text-sm font-semibold text-white transition hover:bg-stone-800"
-          >
-            Перейти к оформлению
-          </Link>
-        </aside>
+          </article>
+        ))}
       </div>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-4 z-20 px-4 lg:hidden">
-        <div className="pointer-events-auto mx-auto flex max-w-xl items-center justify-between rounded-[1.75rem] bg-stone-900 px-4 py-3 text-white shadow-2xl">
+      <div className="mt-5 app-soft-card p-4">
+        <p className="kicker">Дальше по шагам</p>
+        <div className="mt-4 grid gap-3">
+          <div className="rounded-[24px] bg-white px-4 py-3 text-sm text-stone-600 shadow-sm">
+            1. Подтверждаете заказ и выбираете demo-способ оплаты.
+          </div>
+          <div className="rounded-[24px] bg-white px-4 py-3 text-sm text-stone-600 shadow-sm">
+            2. После `Success` заказ получает номер и попадает в общую очередь.
+          </div>
+        </div>
+      </div>
+
+      <div className="pointer-events-none fixed inset-x-0 bottom-24 z-30 px-4">
+        <div className="floating-bar pointer-events-auto mx-auto flex w-full max-w-[398px] items-center justify-between gap-4 px-4 py-3">
           <div>
-            <p className="text-sm text-stone-300">Итого</p>
-            <p className="text-base font-semibold">{formatMoney(summary.totalPrice)}</p>
+            <p className="text-sm text-stone-500">{summary.itemsCount} позиций</p>
+            <p className="mt-1 text-lg font-semibold tracking-tight text-stone-950">
+              {formatMoney(summary.totalPrice)}
+            </p>
           </div>
           <Link
             href="/checkout"
-            className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-stone-900"
+            className="rounded-full bg-stone-950 px-4 py-3 text-sm font-semibold text-white"
           >
-            Оформить
+            К оформлению
           </Link>
         </div>
       </div>
-    </PageShell>
+    </CustomerMobileShell>
   );
 }

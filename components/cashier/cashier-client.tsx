@@ -52,7 +52,7 @@ export function CashierClient({ products, initialQueue }: CashierClientProps) {
 
       setQueue(data);
     } catch {
-      // Не прерываем работу кассира из-за временного сбоя polling.
+      // Не прерываем работу cashier demo из-за временного сбоя polling.
     }
   }
 
@@ -129,22 +129,23 @@ export function CashierClient({ products, initialQueue }: CashierClientProps) {
 
   return (
     <PageShell
-      eyebrow="Staff demo"
-      title="Добавление очного заказа"
-      description="Это не замена реальной кассе кофейни. Экран показывает demo-логику: уже принятый очный заказ тоже может попасть в ту же производственную очередь, что и online-заказ."
+      eyebrow="Cashier demo"
+      title="Очный заказ"
+      description="Это не POS и не реальная касса кофейни. Экран показывает demo-сценарий: уже принятый офлайн-заказ тоже попадает в ту же производственную очередь."
       actions={
-        <StaffSignOutButton className="inline-flex rounded-full border border-stone-300 bg-white px-5 py-3 text-sm font-semibold text-stone-700 transition hover:border-stone-400 hover:bg-stone-50 disabled:cursor-wait disabled:opacity-60" />
+        <StaffSignOutButton className="btn-secondary disabled:cursor-wait disabled:opacity-60" />
       }
     >
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.25fr)_420px]">
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_420px]">
         <section className="space-y-8">
           {groupedProducts.map(([category, categoryProducts]) => (
             <section key={category}>
-              <div className="mb-4">
-                <p className="label-muted">{category}</p>
-                <h2 className="mt-1 text-2xl font-semibold text-stone-900">
-                  {category}
-                </h2>
+              <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+                <div>
+                  <p className="kicker">{category}</p>
+                  <h2 className="mt-2 section-title">{category}</h2>
+                </div>
+                <p className="text-sm text-stone-500">{categoryProducts.length} позиций</p>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -156,11 +157,14 @@ export function CashierClient({ products, initialQueue }: CashierClientProps) {
                     onClick={() =>
                       setCart((currentCart) => addProductToCart(currentCart, product))
                     }
-                    className="surface min-h-36 p-5 text-left transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="surface min-h-[170px] p-5 text-left transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     <div className="flex h-full flex-col justify-between">
                       <div>
-                        <p className="text-2xl font-semibold text-stone-900">
+                        {product.category ? (
+                          <p className="label-muted">{product.category}</p>
+                        ) : null}
+                        <p className="mt-3 text-2xl font-semibold tracking-tight text-stone-900">
                           {product.displayName}
                         </p>
                         {product.description ? (
@@ -180,37 +184,33 @@ export function CashierClient({ products, initialQueue }: CashierClientProps) {
           ))}
         </section>
 
-        <aside className="space-y-6 xl:sticky xl:top-6 xl:h-fit">
+        <aside className="space-y-6 xl:sticky xl:top-24 xl:h-fit">
           <section className="surface p-6">
             <div className="flex items-end justify-between gap-4">
               <div>
-                <p className="label-muted">Текущая корзина</p>
-                <h2 className="mt-2 text-2xl font-semibold text-stone-900">
+                <p className="kicker">Текущая корзина</p>
+                <h2 className="mt-3 text-3xl font-semibold tracking-tight text-stone-950">
                   Очный заказ
                 </h2>
               </div>
-              <p className="text-lg font-semibold text-stone-900">
+              <p className="text-xl font-semibold text-stone-950">
                 {formatMoney(summary.totalPrice)}
               </p>
             </div>
 
             {cart.length === 0 ? (
-              <p className="mt-6 rounded-2xl bg-stone-50 p-4 text-sm text-stone-600">
-                Корзина пуста. Выберите позиции слева, чтобы сымитировать уже принятый заказ со стойки.
+              <p className="mt-6 rounded-[24px] bg-stone-50 p-4 text-sm leading-6 text-stone-600">
+                Корзина пуста. Выберите позиции слева, чтобы сымитировать уже принятый
+                заказ со стойки.
               </p>
             ) : (
               <div className="mt-6 space-y-4">
                 {cart.map((item) => (
-                  <div
-                    key={item.productId}
-                    className="rounded-2xl bg-stone-50 p-4"
-                  >
+                  <div key={item.productId} className="rounded-[24px] bg-stone-50 p-4">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <p className="text-base font-semibold text-stone-900">
-                          {item.name}
-                        </p>
-                        <p className="text-sm text-stone-500">
+                        <p className="text-base font-semibold text-stone-900">{item.name}</p>
+                        <p className="mt-1 text-sm text-stone-500">
                           {formatMoney(item.price)} за единицу
                         </p>
                       </div>
@@ -221,7 +221,7 @@ export function CashierClient({ products, initialQueue }: CashierClientProps) {
                             removeCartItem(currentCart, item.productId),
                           )
                         }
-                        className="text-sm font-medium text-stone-500 transition hover:text-stone-900"
+                        className="text-sm font-semibold text-stone-500 transition hover:text-stone-900"
                       >
                         Удалить
                       </button>
@@ -263,7 +263,7 @@ export function CashierClient({ products, initialQueue }: CashierClientProps) {
             )}
 
             {error ? (
-              <p className="mt-4 rounded-2xl bg-red-50 p-4 text-sm text-red-700">
+              <p className="mt-4 rounded-[24px] bg-red-50 p-4 text-sm leading-6 text-red-700">
                 {error}
               </p>
             ) : null}
@@ -272,14 +272,15 @@ export function CashierClient({ products, initialQueue }: CashierClientProps) {
               type="button"
               onClick={handleConfirmOfflineOrder}
               disabled={cart.length === 0 || isSubmitting}
-              className="mt-6 w-full rounded-full bg-stone-900 px-5 py-4 text-sm font-semibold text-white transition hover:bg-stone-800 disabled:cursor-not-allowed disabled:bg-stone-300"
+              className="btn-primary mt-6 w-full disabled:cursor-not-allowed disabled:bg-stone-300"
             >
               {isSubmitting ? "Добавляем…" : "Добавить очный заказ в очередь"}
             </button>
 
             {lastCreatedOrder ? (
-              <div className="mt-4 rounded-2xl bg-emerald-50 p-4 text-sm text-emerald-800">
-                Очный заказ {formatOrderNumber(lastCreatedOrder.publicOrderNumber)} добавлен в общую очередь.
+              <div className="mt-4 rounded-[24px] bg-emerald-50 p-4 text-sm leading-6 text-emerald-800">
+                Очный заказ {formatOrderNumber(lastCreatedOrder.publicOrderNumber)} добавлен
+                в общую очередь.
               </div>
             ) : null}
           </section>
@@ -287,21 +288,19 @@ export function CashierClient({ products, initialQueue }: CashierClientProps) {
           <section className="surface p-6">
             <div className="flex items-end justify-between gap-4">
               <div>
-                <p className="label-muted">Активная очередь</p>
-                <h2 className="mt-2 text-2xl font-semibold text-stone-900">
-                  Текущая очередь
+                <p className="kicker">Активная очередь</p>
+                <h2 className="mt-3 text-3xl font-semibold tracking-tight text-stone-950">
+                  Что сейчас в работе
                 </h2>
               </div>
-              <p className="text-sm text-stone-500">
-                {queue.activeOrders.length} активных
-              </p>
+              <p className="text-sm text-stone-500">{queue.activeOrders.length} активных</p>
             </div>
 
             {queue.activeOrders.length === 0 ? (
               <div className="mt-6">
                 <EmptyState
-                  title="Очередь пуста"
-                  description="Новых подтверждённых заказов пока нет."
+                  title="Очередь пока пуста"
+                  description="Новых подтвержденных заказов сейчас нет."
                 />
               </div>
             ) : (
@@ -309,7 +308,7 @@ export function CashierClient({ products, initialQueue }: CashierClientProps) {
                 {queue.activeOrders.map((order, index) => (
                   <article
                     key={order.id}
-                    className={`rounded-2xl border p-4 ${
+                    className={`rounded-[24px] border p-4 ${
                       index === 0
                         ? "border-brand-200 bg-brand-50"
                         : "border-stone-200 bg-stone-50"
@@ -317,7 +316,7 @@ export function CashierClient({ products, initialQueue }: CashierClientProps) {
                   >
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
-                        <p className="text-lg font-semibold text-stone-900">
+                        <p className="text-lg font-semibold tracking-tight text-stone-900">
                           {formatOrderNumber(order.publicOrderNumber)}
                         </p>
                         <p className="mt-1 text-sm text-stone-500">

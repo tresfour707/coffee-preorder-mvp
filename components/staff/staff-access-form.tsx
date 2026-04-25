@@ -49,13 +49,14 @@ export function StaffAccessForm({ nextPath }: StaffAccessFormProps) {
   return (
     <form onSubmit={handleSubmit} className="surface mx-auto w-full max-w-md p-6 md:p-8">
       <div>
-        <p className="label-muted">Staff access</p>
-        <h2 className="mt-2 text-2xl font-semibold text-stone-900">
+        <p className="kicker">Staff access</p>
+        <h2 className="mt-3 text-3xl font-semibold tracking-tight text-stone-900">
           Открыть staff-экраны
         </h2>
-        <p className="mt-3 text-sm leading-6 text-stone-600">
-          Это лёгкая demo-защита для экранов бариста и offline intake. По умолчанию
-          используйте код <span className="font-semibold text-stone-900">demo123</span>.
+        <p className="mt-3 text-sm leading-6 text-stone-600 md:text-base">
+          Это лёгкая защита для demo-доступа к экранам бариста и офлайн-приёма заказа.
+          По умолчанию используйте код{" "}
+          <span className="font-semibold text-stone-900">demo123</span>.
         </p>
       </div>
 
@@ -65,7 +66,7 @@ export function StaffAccessForm({ nextPath }: StaffAccessFormProps) {
           type="password"
           value={code}
           onChange={(event) => setCode(event.target.value)}
-          className="mt-2 w-full rounded-2xl border border-stone-300 bg-white px-4 py-3 text-sm text-stone-900 outline-none transition focus:border-stone-900"
+          className="field-input"
           placeholder="Введите код доступа"
           required
         />
@@ -80,7 +81,7 @@ export function StaffAccessForm({ nextPath }: StaffAccessFormProps) {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="mt-6 w-full rounded-full bg-stone-900 px-5 py-4 text-sm font-semibold text-white transition hover:bg-stone-800 disabled:cursor-wait disabled:bg-stone-400"
+        className="btn-primary mt-6 w-full disabled:cursor-wait disabled:bg-stone-400"
       >
         {isSubmitting ? "Открываем…" : "Открыть доступ"}
       </button>

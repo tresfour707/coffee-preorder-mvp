@@ -54,15 +54,15 @@ export function SignUpForm({ nextPath }: SignUpFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="surface mx-auto w-full max-w-md p-6 md:p-8">
+    <form onSubmit={handleSubmit} className="app-card mx-auto w-full p-6">
       <div>
-        <p className="label-muted">Demo account</p>
-        <h2 className="mt-2 text-2xl font-semibold text-stone-900">
+        <p className="kicker">Demo account</p>
+        <h2 className="mt-3 text-[30px] font-semibold leading-[0.98] tracking-tight text-stone-900">
           Создать аккаунт
         </h2>
         <p className="mt-3 text-sm leading-6 text-stone-600">
-          Аккаунт нужен для демо, чтобы заказы были привязаны к конкретному
-          пользователю и их можно было тестировать с нескольких профилей.
+          Аккаунт нужен для demo, чтобы корзина и история заказов были привязаны к
+          конкретному пользователю и не пересекались между собой.
         </p>
       </div>
 
@@ -73,7 +73,7 @@ export function SignUpForm({ nextPath }: SignUpFormProps) {
             type="text"
             value={name}
             onChange={(event) => setName(event.target.value)}
-            className="mt-2 w-full rounded-2xl border border-stone-300 bg-white px-4 py-3 text-sm text-stone-900 outline-none transition focus:border-stone-900"
+            className="field-input"
             placeholder="Например, Анна"
             autoComplete="name"
             required
@@ -86,7 +86,7 @@ export function SignUpForm({ nextPath }: SignUpFormProps) {
             type="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
-            className="mt-2 w-full rounded-2xl border border-stone-300 bg-white px-4 py-3 text-sm text-stone-900 outline-none transition focus:border-stone-900"
+            className="field-input"
             placeholder="name@example.com"
             autoComplete="email"
             required
@@ -99,7 +99,7 @@ export function SignUpForm({ nextPath }: SignUpFormProps) {
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
-            className="mt-2 w-full rounded-2xl border border-stone-300 bg-white px-4 py-3 text-sm text-stone-900 outline-none transition focus:border-stone-900"
+            className="field-input"
             placeholder="Минимум 6 символов"
             autoComplete="new-password"
             required
@@ -116,14 +116,17 @@ export function SignUpForm({ nextPath }: SignUpFormProps) {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="mt-6 w-full rounded-full bg-stone-900 px-5 py-4 text-sm font-semibold text-white transition hover:bg-stone-800 disabled:cursor-wait disabled:bg-stone-400"
+        className="btn-primary mt-6 w-full disabled:cursor-wait disabled:bg-stone-400"
       >
         {isSubmitting ? "Создаём…" : "Создать аккаунт"}
       </button>
 
       <p className="mt-4 text-sm text-stone-600">
         Уже есть аккаунт?{" "}
-        <Link href={`/sign-in?next=${encodeURIComponent(nextPath)}`} className="font-semibold text-stone-900">
+        <Link
+          href={`/sign-in?next=${encodeURIComponent(nextPath)}`}
+          className="font-semibold text-stone-900"
+        >
           Войти
         </Link>
       </p>

@@ -25,31 +25,33 @@ export function PageShell({
 }: PageShellProps) {
   return (
     <main className={cn("page-grid", className)}>
-      <header className="mb-6 flex flex-col gap-4 md:mb-8 md:flex-row md:items-end md:justify-between">
-        <div className="max-w-2xl">
-          {eyebrow ? <p className="label-muted">{eyebrow}</p> : null}
-          <h1 className="mt-2 text-[2rem] font-semibold tracking-tight text-stone-900 md:text-5xl">
-            {title}
-          </h1>
-          {description ? (
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-stone-600 md:text-base">
-              {description}
-            </p>
+      <header className="hero-surface">
+        <div className="relative z-10 flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+          <div className="max-w-3xl">
+            {eyebrow ? <p className="kicker">{eyebrow}</p> : null}
+            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-stone-950 sm:text-5xl md:text-6xl">
+              {title}
+            </h1>
+            {description ? (
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-stone-600 md:text-base md:leading-7">
+                {description}
+              </p>
+            ) : null}
+          </div>
+
+          {actions ? (
+            <div className="flex w-full flex-col gap-3 [&>*]:w-full [&>*]:justify-center sm:flex-row sm:flex-wrap sm:[&>*]:w-auto xl:max-w-md xl:justify-end">
+              {actions}
+            </div>
           ) : null}
         </div>
-
-        {actions ? (
-          <div className="flex w-full flex-col gap-3 [&>*]:w-full [&>*]:justify-center md:w-auto md:flex-row md:flex-wrap md:justify-end md:[&>*]:w-auto">
-            {actions}
-          </div>
-        ) : null}
       </header>
 
-      {subnav ? <div className="sticky top-3 z-20 mb-6 md:mb-8">{subnav}</div> : null}
+      {subnav ? <div className="sticky top-3 z-30 mt-4">{subnav}</div> : null}
 
-      {banner ? <div className="mb-6 md:mb-8">{banner}</div> : null}
+      {banner ? <div className="mt-4">{banner}</div> : null}
 
-      {children}
+      <div className="mt-6">{children}</div>
     </main>
   );
 }

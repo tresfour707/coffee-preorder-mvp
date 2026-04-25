@@ -50,15 +50,15 @@ export function SignInForm({ nextPath }: SignInFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="surface mx-auto w-full max-w-md p-6 md:p-8">
+    <form onSubmit={handleSubmit} className="app-card mx-auto w-full p-6">
       <div>
-        <p className="label-muted">Demo account</p>
-        <h2 className="mt-2 text-2xl font-semibold text-stone-900">
+        <p className="kicker">Demo account</p>
+        <h2 className="mt-3 text-[30px] font-semibold leading-[0.98] tracking-tight text-stone-900">
           Войти в аккаунт
         </h2>
         <p className="mt-3 text-sm leading-6 text-stone-600">
-          Это легкий demo-login. Он нужен, чтобы у каждого тестового пользователя
-          были свои заказы и свой `userId`.
+          Вход нужен для demo-сценария: у каждого пользователя свои корзина, заказы
+          и доступ к статусам только своих online-заказов.
         </p>
       </div>
 
@@ -69,7 +69,7 @@ export function SignInForm({ nextPath }: SignInFormProps) {
             type="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
-            className="mt-2 w-full rounded-2xl border border-stone-300 bg-white px-4 py-3 text-sm text-stone-900 outline-none transition focus:border-stone-900"
+            className="field-input"
             placeholder="name@example.com"
             autoComplete="email"
             required
@@ -82,7 +82,7 @@ export function SignInForm({ nextPath }: SignInFormProps) {
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
-            className="mt-2 w-full rounded-2xl border border-stone-300 bg-white px-4 py-3 text-sm text-stone-900 outline-none transition focus:border-stone-900"
+            className="field-input"
             placeholder="Минимум 6 символов"
             autoComplete="current-password"
             required
@@ -99,14 +99,17 @@ export function SignInForm({ nextPath }: SignInFormProps) {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="mt-6 w-full rounded-full bg-stone-900 px-5 py-4 text-sm font-semibold text-white transition hover:bg-stone-800 disabled:cursor-wait disabled:bg-stone-400"
+        className="btn-primary mt-6 w-full disabled:cursor-wait disabled:bg-stone-400"
       >
         {isSubmitting ? "Входим…" : "Войти"}
       </button>
 
       <p className="mt-4 text-sm text-stone-600">
         Нет аккаунта?{" "}
-        <Link href={`/sign-up?next=${encodeURIComponent(nextPath)}`} className="font-semibold text-stone-900">
+        <Link
+          href={`/sign-up?next=${encodeURIComponent(nextPath)}`}
+          className="font-semibold text-stone-900"
+        >
           Создать
         </Link>
       </p>

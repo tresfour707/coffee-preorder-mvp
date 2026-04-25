@@ -3,9 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { AuthActions } from "@/components/auth/auth-actions";
-import { CustomerTopNav } from "@/components/customer/customer-top-nav";
-import { PageShell } from "@/components/ui/page-shell";
+import { CustomerMobileShell } from "@/components/customer/customer-mobile-shell";
 import { getCartOwnerKey, useCustomerCartStore } from "@/lib/cart-store";
 import { formatMoney } from "@/lib/money";
 import type { DemoPaymentDetails, DemoPaymentResolution, ViewerSummary } from "@/lib/types";
@@ -70,102 +68,126 @@ export function DemoPaymentClient({
   }
 
   return (
-    <PageShell
-      eyebrow="Демо-оплата"
-      title="Экран демо-оплаты"
-      description="Это имитация внешнего сервиса оплаты. Только после `Success` заказ получит публичный номер и попадёт в общую очередь."
-      subnav={<CustomerTopNav viewer={viewer} />}
-      actions={<AuthActions viewer={viewer} />}
+    <CustomerMobileShell
+      viewer={viewer}
+      showBottomNav={false}
+      className="pb-44"
+      header={
+        <div>
+          <p className="kicker">Demo payment</p>
+          <h1 className="mt-2 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
+            Подтвердите оплату
+          </h1>
+          <p className="mt-3 max-w-[320px] text-sm leading-6 text-stone-600">
+            Это имитация внешнего шага оплаты. Только после `Success` заказ получит
+            публичный номер и попадёт в общую очередь.
+          </p>
+        </div>
+      }
     >
-      <div className="mx-auto grid w-full max-w-5xl gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
-        <section className="order-2 surface p-6 md:p-8 lg:order-1">
-          <div className="flex flex-wrap items-start justify-between gap-4">
+      <div className="space-y-4">
+        <section className="app-card p-5">
+          <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="label-muted">Плательщик</p>
-              <h2 className="mt-2 text-2xl font-semibold text-stone-900">
+              <p className="kicker">Плательщик</p>
+              <h2 className="mt-2 text-[30px] font-semibold leading-[0.98] tracking-tight text-stone-950">
                 {payment.customerName ?? viewer.name}
               </h2>
-              <p className="mt-2 text-sm text-stone-600">
+              <p className="mt-2 text-sm text-stone-500">
                 {payment.customerEmail ?? viewer.email}
               </p>
             </div>
-            <div className="rounded-3xl bg-stone-100 px-5 py-4 text-right">
-              <p className="label-muted">Способ оплаты</p>
-              <p className="mt-2 text-lg font-semibold text-stone-900">
+            <div className="rounded-[24px] bg-stone-950 px-4 py-3 text-right text-white">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-stone-300">
+                Способ
+              </p>
+              <p className="mt-2 text-sm font-semibold">
                 {payment.method === "DEMO_SBP" ? "Демо-СБП" : "Демо-карта"}
               </p>
             </div>
           </div>
+        </section>
 
-          <div className="mt-8 space-y-4">
+        <section className="app-card p-5">
+          <p className="kicker">Сумма</p>
+          <h2 className="mt-2 text-[44px] font-semibold leading-none tracking-tight text-stone-950">
+            {formatMoney(payment.amount)}
+          </h2>
+          <p className="mt-3 text-sm leading-6 text-stone-600">
+            Экран честно показывает логику шага оплаты, но не делает вид, что уже
+            подключён к реальному acquiring.
+          </p>
+        </section>
+
+        <section className="app-card p-5">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <p className="kicker">Состав заказа</p>
+              <h2 className="mt-2 text-[30px] font-semibold leading-[0.98] tracking-tight text-stone-950">
+                Что оплачиваем
+              </h2>
+            </div>
+            <p className="text-sm text-stone-500">{payment.items.length} позиций</p>
+          </div>
+
+          <div className="mt-4 space-y-3">
             {payment.items.map((item) => (
-              <div
-                key={item.id}
-                className="flex items-center justify-between gap-4 rounded-2xl bg-stone-50 p-4"
-              >
-                <div>
-                  <p className="text-base font-semibold text-stone-900">
-                    {item.quantity} × {item.productName}
-                  </p>
-                  <p className="text-sm text-stone-500">
-                    {formatMoney(item.unitPrice)} за единицу
+              <div key={item.id} className="rounded-[24px] bg-stone-50 px-4 py-3">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-semibold text-stone-900">
+                      {item.quantity} × {item.productName}
+                    </p>
+                    <p className="mt-1 text-sm text-stone-500">
+                      {formatMoney(item.unitPrice)} за единицу
+                    </p>
+                  </div>
+                  <p className="text-sm font-semibold text-stone-900">
+                    {formatMoney(item.subtotal)}
                   </p>
                 </div>
-                <p className="text-base font-semibold text-stone-900">
-                  {formatMoney(item.subtotal)}
-                </p>
               </div>
             ))}
           </div>
 
           {error ? (
-            <p className="mt-6 rounded-2xl bg-red-50 p-4 text-sm text-red-700">
+            <div className="mt-4 rounded-[24px] bg-red-50 p-4 text-sm leading-6 text-red-700">
               {error}
-            </p>
+            </div>
           ) : null}
         </section>
-
-        <aside className="order-1 surface h-fit p-6 lg:order-2 lg:sticky lg:top-6">
-          <p className="label-muted">Сумма</p>
-          <h2 className="mt-2 text-4xl font-semibold text-stone-900">
-            {formatMoney(payment.amount)}
-          </h2>
-
-          <p className="mt-6 rounded-2xl bg-brand-50 p-4 text-sm leading-6 text-brand-900">
-            Это демо-экран для встречи с владельцем. Он показывает логику оплаты,
-            но не делает вид, что уже интегрирован с банком или кассой кофейни.
-          </p>
-
-          <div className="mt-6 space-y-3">
-            <button
-              type="button"
-              onClick={() => handleResolve("SUCCESS")}
-              disabled={isSubmitting !== null}
-              className="w-full rounded-full bg-emerald-600 px-5 py-4 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-wait disabled:bg-emerald-300"
-            >
-              {isSubmitting === "SUCCESS" ? "Подтверждаем…" : "Успешная оплата"}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleResolve("FAIL")}
-              disabled={isSubmitting !== null}
-              className="w-full rounded-full bg-red-600 px-5 py-4 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-wait disabled:bg-red-300"
-            >
-              {isSubmitting === "FAIL" ? "Фиксируем…" : "Ошибка оплаты"}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleResolve("CANCEL")}
-              disabled={isSubmitting !== null}
-              className="w-full rounded-full border border-stone-300 bg-white px-5 py-4 text-sm font-semibold text-stone-700 transition hover:border-stone-400 hover:bg-stone-50 disabled:cursor-wait disabled:opacity-60"
-            >
-              {isSubmitting === "CANCEL" ? "Отменяем…" : "Отмена"}
-            </button>
-          </div>
-        </aside>
       </div>
-    </PageShell>
+
+      <div className="pointer-events-none fixed inset-x-0 bottom-4 z-30 px-4">
+        <div className="floating-bar pointer-events-auto mx-auto w-full max-w-[398px] space-y-3 p-3">
+          <button
+            type="button"
+            onClick={() => handleResolve("SUCCESS")}
+            disabled={isSubmitting !== null}
+            className="w-full rounded-full bg-emerald-600 px-5 py-4 text-sm font-semibold text-white transition disabled:cursor-wait disabled:bg-emerald-300"
+          >
+            {isSubmitting === "SUCCESS" ? "Подтверждаем…" : "Успешная оплата"}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handleResolve("FAIL")}
+            disabled={isSubmitting !== null}
+            className="w-full rounded-full bg-red-600 px-5 py-4 text-sm font-semibold text-white transition disabled:cursor-wait disabled:bg-red-300"
+          >
+            {isSubmitting === "FAIL" ? "Фиксируем…" : "Ошибка оплаты"}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handleResolve("CANCEL")}
+            disabled={isSubmitting !== null}
+            className="w-full rounded-full border border-stone-200 bg-white px-5 py-4 text-sm font-semibold text-stone-700 transition disabled:cursor-wait disabled:opacity-60"
+          >
+            {isSubmitting === "CANCEL" ? "Отменяем…" : "Отмена"}
+          </button>
+        </div>
+      </div>
+    </CustomerMobileShell>
   );
 }

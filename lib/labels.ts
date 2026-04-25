@@ -1,11 +1,11 @@
 import type { OrderSource, OrderStatus } from "@/lib/types";
 
 export const statusLabels: Record<OrderStatus, string> = {
-  DRAFT: "Draft",
-  WAITING: "Waiting",
-  PREPARING: "Preparing",
-  READY: "Ready",
-  CANCELLED: "Cancelled",
+  DRAFT: "Черновик",
+  WAITING: "В очереди",
+  PREPARING: "Готовится",
+  READY: "Готов",
+  CANCELLED: "Отменен",
 };
 
 export const sourceLabels: Record<OrderSource, string> = {

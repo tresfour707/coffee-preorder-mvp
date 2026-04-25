@@ -32,7 +32,7 @@ export function StaffSignOutButton({ className }: StaffSignOutButtonProps) {
       disabled={isSubmitting}
       className={className}
     >
-      {isSubmitting ? "Закрываем…" : "Закрыть staff mode"}
+      {isSubmitting ? "Закрываем…" : "Выйти из staff-режима"}
     </button>
   );
 }

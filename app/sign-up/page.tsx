@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
 
-import { CustomerTopNav } from "@/components/customer/customer-top-nav";
+import { CustomerMobileShell } from "@/components/customer/customer-mobile-shell";
 import { SignUpForm } from "@/components/auth/sign-up-form";
-import { PageShell } from "@/components/ui/page-shell";
 import { getCurrentUser } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
@@ -25,13 +24,22 @@ export default async function SignUpPage({
       : "/menu";
 
   return (
-    <PageShell
-      eyebrow="Аккаунт"
-      title="Регистрация"
-      description="Создайте demo-аккаунт, чтобы тестировать заказы под разными пользователями."
-      subnav={<CustomerTopNav viewer={null} />}
+    <CustomerMobileShell
+      viewer={null}
+      showBottomNav={false}
+      header={
+        <div>
+          <p className="kicker">Аккаунт</p>
+          <h1 className="mt-2 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
+            Создать аккаунт
+          </h1>
+          <p className="mt-3 max-w-[320px] text-sm leading-6 text-stone-600">
+            Создайте demo-аккаунт, чтобы тестировать заказы под разными пользователями.
+          </p>
+        </div>
+      }
     >
       <SignUpForm nextPath={nextPath} />
-    </PageShell>
+    </CustomerMobileShell>
   );
 }
