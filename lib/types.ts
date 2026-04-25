@@ -7,6 +7,7 @@ export type OrderStatus =
   | "CANCELLED";
 export type PaymentStatus = "PENDING" | "SUCCEEDED" | "FAILED" | "CANCELLED";
 export type PaymentMethod = "DEMO_CARD" | "DEMO_SBP";
+export type ProductKind = "FOOD" | "DRINK";
 
 export type ViewerSummary = {
   id: string;
@@ -17,10 +18,27 @@ export type ViewerSummary = {
 export type ProductSummary = {
   id: string;
   name: string;
+  displayName: string;
   description: string | null;
   price: number;
   available: boolean;
+  kind: ProductKind;
   category: string | null;
+  groupKey: string | null;
+  sizeLabel: string | null;
+  sizeSort: number | null;
+};
+
+export type MenuProductSummary = {
+  id: string;
+  name: string;
+  description: string | null;
+  category: string | null;
+  kind: ProductKind;
+  available: boolean;
+  priceFrom: number;
+  priceTo: number;
+  variants: ProductSummary[];
 };
 
 export type OrderRequestItem = {
@@ -34,6 +52,7 @@ export type CartLine = {
   description: string | null;
   category: string | null;
   price: number;
+  sizeLabel: string | null;
   quantity: number;
 };
 

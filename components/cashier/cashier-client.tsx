@@ -161,7 +161,7 @@ export function CashierClient({ products, initialQueue }: CashierClientProps) {
                     <div className="flex h-full flex-col justify-between">
                       <div>
                         <p className="text-2xl font-semibold text-stone-900">
-                          {product.name}
+                          {product.displayName}
                         </p>
                         {product.description ? (
                           <p className="mt-2 text-sm leading-6 text-stone-600">
@@ -235,8 +235,13 @@ export function CashierClient({ products, initialQueue }: CashierClientProps) {
                             addProductToCart(currentCart, {
                               id: item.productId,
                               name: item.name,
+                              displayName: item.name,
                               description: item.description,
+                              kind: "FOOD",
                               category: item.category,
+                              groupKey: item.productId,
+                              sizeLabel: item.sizeLabel,
+                              sizeSort: null,
                               price: item.price,
                               available: true,
                             }),

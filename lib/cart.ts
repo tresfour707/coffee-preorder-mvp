@@ -15,10 +15,11 @@ export function addProductToCart(lines: CartLine[], product: ProductSummary) {
     ...lines,
     {
       productId: product.id,
-      name: product.name,
+      name: product.displayName,
       description: product.description,
       category: product.category,
       price: product.price,
+      sizeLabel: product.sizeLabel,
       quantity: 1,
     },
   ];

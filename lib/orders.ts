@@ -9,6 +9,7 @@ import {
 import { AppError } from "@/lib/app-error";
 import { getBusinessDay } from "@/lib/business-day";
 import { normalizeRequestItems } from "@/lib/cart";
+import { formatProductDisplayName } from "@/lib/products";
 import { prisma } from "@/lib/prisma";
 import {
   ensureQueueState,
@@ -147,7 +148,7 @@ async function getValidatedProducts(
 
     return {
       productId: product.id,
-      productNameSnapshot: product.name,
+      productNameSnapshot: formatProductDisplayName(product),
       unitPriceSnapshot: product.price,
       quantity: item.quantity,
     };

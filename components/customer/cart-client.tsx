@@ -120,9 +120,14 @@ export function CartClient({
                     addProduct(ownerKey, {
                       id: item.productId,
                       name: item.name,
+                      displayName: item.name,
                       description: item.description,
                       price: item.price,
+                      kind: "FOOD",
                       category: item.category,
+                      groupKey: item.productId,
+                      sizeLabel: item.sizeLabel,
+                      sizeSort: null,
                       available: true,
                     })
                   }

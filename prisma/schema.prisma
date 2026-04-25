@@ -32,6 +32,11 @@ enum PaymentMethod {
   DEMO_SBP
 }
 
+enum ProductKind {
+  FOOD
+  DRINK
+}
+
 model User {
   id           String    @id @default(cuid())
   name         String
@@ -62,13 +67,18 @@ model Product {
   description String?
   price       Int
   available   Boolean     @default(true)
+  kind        ProductKind @default(FOOD)
   category    String?
+  groupKey    String?
+  sizeLabel   String?
+  sizeSort    Int?
   sortOrder   Int         @default(0)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   orderItems  OrderItem[]
 
-  @@index([available, category, sortOrder])
+  @@index([available, category, sortOrder, sizeSort])
+  @@index([groupKey])
 }
 
 model Order {
