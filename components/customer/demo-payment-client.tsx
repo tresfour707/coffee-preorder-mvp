@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { AuthActions } from "@/components/auth/auth-actions";
+import { CustomerTopNav } from "@/components/customer/customer-top-nav";
 import { PageShell } from "@/components/ui/page-shell";
 import { getCartOwnerKey, useCustomerCartStore } from "@/lib/cart-store";
 import { formatMoney } from "@/lib/money";
@@ -73,6 +74,7 @@ export function DemoPaymentClient({
       eyebrow="Демо-оплата"
       title="Экран демо-оплаты"
       description="Это имитация внешнего сервиса оплаты. Только после `Success` заказ получит публичный номер и попадёт в общую очередь."
+      subnav={<CustomerTopNav viewer={viewer} />}
       actions={<AuthActions viewer={viewer} />}
     >
       <div className="mx-auto grid w-full max-w-5xl gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">

@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { AuthActions } from "@/components/auth/auth-actions";
+import { CustomerTopNav } from "@/components/customer/customer-top-nav";
+import { PublicQueueBanner } from "@/components/customer/public-queue-banner";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageShell } from "@/components/ui/page-shell";
 import { QuantityControl } from "@/components/ui/quantity-control";
@@ -14,13 +16,17 @@ import {
   useCustomerCartStore,
 } from "@/lib/cart-store";
 import { formatMoney } from "@/lib/money";
-import type { ViewerSummary } from "@/lib/types";
+import type { PublicQueueSummary, ViewerSummary } from "@/lib/types";
 
 type CartClientProps = {
   viewer: ViewerSummary | null;
+  initialQueueSummary: PublicQueueSummary;
 };
 
-export function CartClient({ viewer }: CartClientProps) {
+export function CartClient({
+  viewer,
+  initialQueueSummary,
+}: CartClientProps) {
   const ownerKey = getCartOwnerKey(viewer?.id);
   const items = useCustomerCartStore(selectCartByOwner(ownerKey));
   const hasHydrated = useCustomerCartStore((state) => state.hasHydrated);
@@ -43,6 +49,8 @@ export function CartClient({ viewer }: CartClientProps) {
         eyebrow={viewer ? "Клиент" : "Гость"}
         title="Корзина"
         description="Проверяем локальную корзину перед checkout."
+        subnav={<CustomerTopNav viewer={viewer} />}
+        banner={<PublicQueueBanner initialSummary={initialQueueSummary} />}
         actions={<AuthActions viewer={viewer} />}
       >
         <div className="surface p-8 text-sm text-stone-600">Загрузка корзины…</div>
@@ -56,6 +64,8 @@ export function CartClient({ viewer }: CartClientProps) {
         eyebrow={viewer ? "Клиент" : "Гость"}
         title="Корзина"
         description="Добавьте напитки или выпечку в заказ, а затем переходите к checkout."
+        subnav={<CustomerTopNav viewer={viewer} />}
+        banner={<PublicQueueBanner initialSummary={initialQueueSummary} />}
         actions={<AuthActions viewer={viewer} />}
       >
         <EmptyState
@@ -80,6 +90,8 @@ export function CartClient({ viewer }: CartClientProps) {
       eyebrow={viewer ? "Клиент" : "Гость"}
       title="Корзина"
       description="Сначала проверьте состав заказа, затем перейдите к оформлению. В очередь заказ попадёт только после успешной демо-оплаты."
+      subnav={<CustomerTopNav viewer={viewer} />}
+      banner={<PublicQueueBanner initialSummary={initialQueueSummary} />}
       actions={<AuthActions viewer={viewer} />}
     >
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">

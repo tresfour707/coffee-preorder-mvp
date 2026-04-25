@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 
+import { CustomerTopNav } from "@/components/customer/customer-top-nav";
 import { SignUpForm } from "@/components/auth/sign-up-form";
 import { PageShell } from "@/components/ui/page-shell";
 import { getCurrentUser } from "@/lib/auth";
@@ -28,6 +29,7 @@ export default async function SignUpPage({
       eyebrow="Аккаунт"
       title="Регистрация"
       description="Создайте demo-аккаунт, чтобы тестировать заказы под разными пользователями."
+      subnav={<CustomerTopNav viewer={null} />}
     >
       <SignUpForm nextPath={nextPath} />
     </PageShell>

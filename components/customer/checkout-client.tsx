@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { AuthActions } from "@/components/auth/auth-actions";
+import { CustomerTopNav } from "@/components/customer/customer-top-nav";
+import { PublicQueueBanner } from "@/components/customer/public-queue-banner";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageShell } from "@/components/ui/page-shell";
 import {
@@ -14,16 +16,23 @@ import {
 } from "@/lib/cart-store";
 import { getCartSummary, toOrderRequestItems } from "@/lib/cart";
 import { formatMoney } from "@/lib/money";
-import type { DemoPaymentDetails, PaymentMethod, ViewerSummary } from "@/lib/types";
+import type {
+  DemoPaymentDetails,
+  PaymentMethod,
+  PublicQueueSummary,
+  ViewerSummary,
+} from "@/lib/types";
 
 type CheckoutClientProps = {
   viewer: ViewerSummary;
   paymentNotice?: "FAILED" | "CANCELLED" | null;
+  initialQueueSummary: PublicQueueSummary;
 };
 
 export function CheckoutClient({
   viewer,
   paymentNotice = null,
+  initialQueueSummary,
 }: CheckoutClientProps) {
   const router = useRouter();
   const ownerKey = getCartOwnerKey(viewer.id);
@@ -86,6 +95,8 @@ export function CheckoutClient({
         eyebrow="Оформление"
         title="Подготовка оплаты"
         description="Подгружаем корзину текущего аккаунта перед демо-оплатой."
+        subnav={<CustomerTopNav viewer={viewer} />}
+        banner={<PublicQueueBanner initialSummary={initialQueueSummary} />}
         actions={<AuthActions viewer={viewer} />}
       >
         <div className="surface p-8 text-sm text-stone-600">
@@ -101,6 +112,8 @@ export function CheckoutClient({
         eyebrow="Оформление"
         title="Оформление"
         description="Сначала соберите заказ в меню, а потом вернитесь к демо-оплате."
+        subnav={<CustomerTopNav viewer={viewer} />}
+        banner={<PublicQueueBanner initialSummary={initialQueueSummary} />}
         actions={<AuthActions viewer={viewer} />}
       >
         <EmptyState
@@ -125,6 +138,8 @@ export function CheckoutClient({
       eyebrow="Оформление"
       title="Демо-оплата"
       description="Здесь мы честно показываем будущий шаг оплаты. В рабочей версии вместо него будет реальный сервис оплаты."
+      subnav={<CustomerTopNav viewer={viewer} />}
+      banner={<PublicQueueBanner initialSummary={initialQueueSummary} />}
       actions={<AuthActions viewer={viewer} />}
     >
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">

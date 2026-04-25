@@ -7,6 +7,8 @@ type PageShellProps = {
   title: string;
   description?: string;
   actions?: ReactNode;
+  subnav?: ReactNode;
+  banner?: ReactNode;
   children: ReactNode;
   className?: string;
 };
@@ -16,6 +18,8 @@ export function PageShell({
   title,
   description,
   actions,
+  subnav,
+  banner,
   children,
   className,
 }: PageShellProps) {
@@ -40,6 +44,10 @@ export function PageShell({
           </div>
         ) : null}
       </header>
+
+      {subnav ? <div className="sticky top-3 z-20 mb-6 md:mb-8">{subnav}</div> : null}
+
+      {banner ? <div className="mb-6 md:mb-8">{banner}</div> : null}
 
       {children}
     </main>

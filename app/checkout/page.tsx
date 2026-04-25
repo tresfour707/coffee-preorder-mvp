@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { CheckoutClient } from "@/components/customer/checkout-client";
 import { getCurrentUser } from "@/lib/auth";
+import { getPublicQueueSummary } from "@/lib/queue";
 
 export const dynamic = "force-dynamic";
 
@@ -24,5 +25,13 @@ export default async function CheckoutPage({
         ? "CANCELLED"
         : null;
 
-  return <CheckoutClient viewer={viewer} paymentNotice={paymentNotice} />;
+  const initialQueueSummary = await getPublicQueueSummary();
+
+  return (
+    <CheckoutClient
+      viewer={viewer}
+      paymentNotice={paymentNotice}
+      initialQueueSummary={initialQueueSummary}
+    />
+  );
 }

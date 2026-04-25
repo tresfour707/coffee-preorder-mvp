@@ -101,3 +101,8 @@ export type QueueSnapshot = {
   nextOrders: QueueOrder[];
   activeOrders: QueueOrder[];
 };
+
+export type PublicQueueSummary = {
+  activeOrdersCount: number;
+  currentOrderPublicNumber: number | null;
+};

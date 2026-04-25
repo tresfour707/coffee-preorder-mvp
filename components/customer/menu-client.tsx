@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 import { AuthActions } from "@/components/auth/auth-actions";
+import { CustomerTopNav } from "@/components/customer/customer-top-nav";
+import { PublicQueueBanner } from "@/components/customer/public-queue-banner";
 import { PageShell } from "@/components/ui/page-shell";
 import { getCartSummary } from "@/lib/cart";
 import {
@@ -13,14 +15,19 @@ import {
 } from "@/lib/cart-store";
 import { groupProductsByCategory } from "@/lib/format";
 import { formatMoney } from "@/lib/money";
-import type { ProductSummary, ViewerSummary } from "@/lib/types";
+import type { ProductSummary, PublicQueueSummary, ViewerSummary } from "@/lib/types";
 
 type MenuClientProps = {
   products: ProductSummary[];
   viewer: ViewerSummary | null;
+  initialQueueSummary: PublicQueueSummary;
 };
 
-export function MenuClient({ products, viewer }: MenuClientProps) {
+export function MenuClient({
+  products,
+  viewer,
+  initialQueueSummary,
+}: MenuClientProps) {
   const ownerKey = getCartOwnerKey(viewer?.id);
   const addProduct = useCustomerCartStore((state) => state.addProduct);
   const items = useCustomerCartStore(selectCartByOwner(ownerKey));
@@ -45,6 +52,8 @@ export function MenuClient({ products, viewer }: MenuClientProps) {
       eyebrow={viewer ? "Клиент" : "Гость"}
       title="Предзаказ кофе"
       description="Клиент собирает заказ в телефоне, проходит демо-оплату и только после успешного результата попадает в ту же очередь, что и очные заказы."
+      subnav={<CustomerTopNav viewer={viewer} />}
+      banner={<PublicQueueBanner initialSummary={initialQueueSummary} />}
       actions={
         <>
           <Link

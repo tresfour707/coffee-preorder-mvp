@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { AuthActions } from "@/components/auth/auth-actions";
+import { CustomerTopNav } from "@/components/customer/customer-top-nav";
 import { PageShell } from "@/components/ui/page-shell";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { formatOrderNumber } from "@/lib/format";
@@ -90,6 +91,7 @@ export function OrderStatusClient({
       eyebrow="Статус заказа"
       title={formatOrderNumber(order.publicOrderNumber)}
       description="Статус обновляется автоматически каждые несколько секунд. Очередь общая для онлайн-заказов и заказов, оформленных на кассе."
+      subnav={<CustomerTopNav viewer={viewer} />}
       actions={
         <>
           <Link

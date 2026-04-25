@@ -29,12 +29,6 @@ export function AuthActions({ viewer }: AuthActionsProps) {
 
   return (
     <>
-      <Link
-        href="/orders"
-        className="inline-flex rounded-full border border-stone-300 bg-white px-5 py-3 text-sm font-semibold text-stone-700 transition hover:border-stone-400 hover:bg-stone-50"
-      >
-        Мои заказы
-      </Link>
       <div className="rounded-3xl border border-stone-200 bg-white px-4 py-3 text-center text-sm text-stone-600 md:rounded-full md:text-left">
         <span className="font-semibold text-stone-900">{viewer.name}</span>
         <span className="mt-1 block text-xs text-stone-500 md:ml-2 md:mt-0 md:inline md:text-sm">

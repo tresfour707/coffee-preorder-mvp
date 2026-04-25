@@ -9,7 +9,13 @@ import {
 import { AppError } from "@/lib/app-error";
 import { QUEUE_PREVIEW_COUNT } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
-import type { OrderDetails, OrderItemSummary, QueueOrder, QueueSnapshot } from "@/lib/types";
+import type {
+  OrderDetails,
+  OrderItemSummary,
+  PublicQueueSummary,
+  QueueOrder,
+  QueueSnapshot,
+} from "@/lib/types";
 
 export type DbClient = PrismaClient | Prisma.TransactionClient;
 
@@ -184,6 +190,27 @@ export async function getQueueSnapshot(db: DbClient = prisma): Promise<QueueSnap
     currentOrder: serializedOrders[0] ?? null,
     nextOrders: serializedOrders.slice(1, QUEUE_PREVIEW_COUNT + 1),
     activeOrders: serializedOrders,
+  };
+}
+
+export async function getPublicQueueSummary(
+  db: DbClient = prisma,
+): Promise<PublicQueueSummary> {
+  const activeOrders = await db.order.findMany({
+    where: {
+      status: {
+        in: activeQueueStatuses,
+      },
+    },
+    orderBy: queueOrderBy,
+    select: {
+      publicOrderNumber: true,
+    },
+  });
+
+  return {
+    activeOrdersCount: activeOrders.length,
+    currentOrderPublicNumber: activeOrders[0]?.publicOrderNumber ?? null,
   };
 }
 

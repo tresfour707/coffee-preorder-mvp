@@ -3,25 +3,38 @@
 import Link from "next/link";
 
 import { AuthActions } from "@/components/auth/auth-actions";
+import { CustomerTopNav } from "@/components/customer/customer-top-nav";
+import { PublicQueueBanner } from "@/components/customer/public-queue-banner";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageShell } from "@/components/ui/page-shell";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { formatDateTime } from "@/lib/business-day";
 import { formatOrderNumber } from "@/lib/format";
 import { formatMoney } from "@/lib/money";
-import type { UserOrderSummary, ViewerSummary } from "@/lib/types";
+import type {
+  PublicQueueSummary,
+  UserOrderSummary,
+  ViewerSummary,
+} from "@/lib/types";
 
 type MyOrdersClientProps = {
   viewer: ViewerSummary;
   orders: UserOrderSummary[];
+  initialQueueSummary: PublicQueueSummary;
 };
 
-export function MyOrdersClient({ viewer, orders }: MyOrdersClientProps) {
+export function MyOrdersClient({
+  viewer,
+  orders,
+  initialQueueSummary,
+}: MyOrdersClientProps) {
   return (
     <PageShell
       eyebrow="Аккаунт"
       title="Мои заказы"
       description="Здесь собраны только ваши онлайн-заказы. Чужие заказы в этом списке не видны."
+      subnav={<CustomerTopNav viewer={viewer} />}
+      banner={<PublicQueueBanner initialSummary={initialQueueSummary} />}
       actions={<AuthActions viewer={viewer} />}
     >
       {orders.length === 0 ? (
