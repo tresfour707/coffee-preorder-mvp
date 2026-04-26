@@ -1,9 +1,8 @@
 "use client";
-
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 import { CustomerMobileShell } from "@/components/customer/customer-mobile-shell";
+import { FloatingCartLink } from "@/components/customer/floating-cart-link";
 import { ProductArtwork } from "@/components/customer/product-artwork";
 import { ProductSheet } from "@/components/customer/product-sheet";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -230,23 +229,10 @@ export function CategoryMenuClient({
       </section>
 
       {isMounted && cartSummary.itemsCount > 0 ? (
-        <div className="customer-action-bar">
-          <div className="customer-action-bar-inner flex items-center justify-between gap-4 px-4 py-3">
-            <div>
-              <p className="text-sm text-stone-500">{cartSummary.itemsCount} позиций</p>
-              <p className="mt-1 text-lg font-semibold tracking-tight text-stone-950">
-                {formatMoney(cartSummary.totalPrice)}
-              </p>
-            </div>
-
-            <Link
-              href="/cart"
-              className="rounded-full bg-[#ff5a4f] px-5 py-3 text-sm font-semibold text-white"
-            >
-              Корзина
-            </Link>
-          </div>
-        </div>
+        <FloatingCartLink
+          itemsCount={cartSummary.itemsCount}
+          totalPrice={cartSummary.totalPrice}
+        />
       ) : null}
 
       {activeProduct ? (

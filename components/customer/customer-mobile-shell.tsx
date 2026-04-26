@@ -7,7 +7,6 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { BrandMark } from "@/components/customer/brand-mark";
 import { cn } from "@/lib/cn";
-import { formatOrderNumber } from "@/lib/format";
 import type { PublicQueueSummary, ViewerSummary } from "@/lib/types";
 
 type CustomerMobileShellProps = {
@@ -36,29 +35,35 @@ function getOrdersWord(count: number) {
 function QueueStrip({ queueSummary }: { queueSummary: PublicQueueSummary }) {
   const waitingText =
     queueSummary.activeOrdersCount > 0
-      ? `Перед новым заказом ${queueSummary.activeOrdersCount} ${getOrdersWord(
+      ? `Перед вами ${queueSummary.activeOrdersCount} ${getOrdersWord(
           queueSummary.activeOrdersCount,
         )}`
-      : "Сейчас очередь свободна";
+      : "Перед вами никого, очередь свободна";
 
   return (
-    <section className="customer-soft-card mt-4 px-4 py-4">
-      <div className="flex items-center justify-between gap-4">
-        <div className="min-w-0">
-          <p className="kicker text-stone-400">Общая очередь</p>
-          <p className="mt-2 text-sm font-semibold leading-6 text-stone-900">
-            {waitingText}
-          </p>
+    <section className="relative mt-4 overflow-hidden rounded-[28px] border border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(249,246,239,0.92))] px-4 py-4 shadow-[0_14px_30px_rgba(31,23,18,0.08)]">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -right-6 top-[-18px] h-28 w-28 rounded-full bg-[#dff3cb]/70 blur-2xl" />
+        <div className="absolute left-[-10px] bottom-[-28px] h-24 w-24 rounded-full bg-[#dce8ff]/80 blur-2xl" />
+        <div className="absolute inset-x-8 top-0 h-px bg-white/90" />
+      </div>
+
+      <div className="relative flex items-center gap-3">
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[20px] bg-[#dff3cb] shadow-[inset_0_2px_0_rgba(255,255,255,0.88),0_10px_20px_rgba(125,176,83,0.15)]">
+          <span className="text-[22px] font-black tracking-tight text-[#5e9c3a]">
+            {queueSummary.activeOrdersCount}
+          </span>
         </div>
 
-        <div className="shrink-0 rounded-full bg-white px-4 py-3 text-right shadow-sm">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-stone-400">
-            Сейчас
+        <div className="min-w-0">
+          <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-stone-400">
+            Очередь
           </p>
-          <p className="mt-1 text-sm font-semibold text-stone-950">
-            {queueSummary.currentOrderPublicNumber
-              ? formatOrderNumber(queueSummary.currentOrderPublicNumber)
-              : "Свободно"}
+          <p className="mt-1 text-[17px] font-semibold leading-6 tracking-tight text-stone-950">
+            {waitingText}
+          </p>
+          <p className="mt-1 text-[13px] leading-5 text-stone-500">
+            Онлайн и офлайн заказы идут в одном потоке.
           </p>
         </div>
       </div>
