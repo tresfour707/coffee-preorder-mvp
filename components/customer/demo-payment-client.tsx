@@ -70,33 +70,33 @@ export function DemoPaymentClient({
   return (
     <CustomerMobileShell
       viewer={viewer}
-      showBottomNav={false}
-      className="pb-44"
+      className="pb-40"
       header={
-        <div>
-          <p className="kicker">Demo payment</p>
-          <h1 className="mt-2 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
+        <section className="customer-soft-card px-5 py-5">
+          <p className="kicker text-stone-400">Demo payment</p>
+          <h1 className="mt-3 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
             Подтвердите оплату
           </h1>
-          <p className="mt-3 max-w-[320px] text-sm leading-6 text-stone-600">
+          <p className="mt-3 text-sm leading-6 text-stone-600">
             Это имитация внешнего шага оплаты. Только после `Success` заказ получит
-            публичный номер и попадёт в общую очередь.
+            номер и попадёт в общую очередь.
           </p>
-        </div>
+        </section>
       }
     >
-      <div className="space-y-4">
-        <section className="app-card p-5">
+      <div className="space-y-3">
+        <section className="customer-soft-card-strong px-5 py-5">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="kicker">Плательщик</p>
-              <h2 className="mt-2 text-[30px] font-semibold leading-[0.98] tracking-tight text-stone-950">
+              <p className="kicker text-stone-400">Плательщик</p>
+              <h2 className="mt-3 text-[30px] font-semibold leading-[0.95] tracking-tight text-stone-950">
                 {payment.customerName ?? viewer.name}
               </h2>
               <p className="mt-2 text-sm text-stone-500">
                 {payment.customerEmail ?? viewer.email}
               </p>
             </div>
+
             <div className="rounded-[24px] bg-stone-950 px-4 py-3 text-right text-white">
               <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-stone-300">
                 Способ
@@ -108,22 +108,22 @@ export function DemoPaymentClient({
           </div>
         </section>
 
-        <section className="app-card p-5">
-          <p className="kicker">Сумма</p>
-          <h2 className="mt-2 text-[44px] font-semibold leading-none tracking-tight text-stone-950">
+        <section className="customer-soft-card-strong px-5 py-5">
+          <p className="kicker text-stone-400">Сумма</p>
+          <h2 className="mt-3 text-[44px] font-semibold leading-none tracking-tight text-stone-950">
             {formatMoney(payment.amount)}
           </h2>
           <p className="mt-3 text-sm leading-6 text-stone-600">
-            Экран честно показывает логику шага оплаты, но не делает вид, что уже
-            подключён к реальному acquiring.
+            Экран выглядит как финальный платёжный шаг, но честно остаётся demo-flow
+            без реального acquiring.
           </p>
         </section>
 
-        <section className="app-card p-5">
+        <section className="customer-soft-card-strong px-5 py-5">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <p className="kicker">Состав заказа</p>
-              <h2 className="mt-2 text-[30px] font-semibold leading-[0.98] tracking-tight text-stone-950">
+              <p className="kicker text-stone-400">Состав заказа</p>
+              <h2 className="mt-3 text-[30px] font-semibold leading-[0.95] tracking-tight text-stone-950">
                 Что оплачиваем
               </h2>
             </div>
@@ -132,7 +132,7 @@ export function DemoPaymentClient({
 
           <div className="mt-4 space-y-3">
             {payment.items.map((item) => (
-              <div key={item.id} className="rounded-[24px] bg-stone-50 px-4 py-3">
+              <div key={item.id} className="rounded-[24px] bg-[#fbf5ef] px-4 py-3">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="text-sm font-semibold text-stone-900">
@@ -151,15 +151,15 @@ export function DemoPaymentClient({
           </div>
 
           {error ? (
-            <div className="mt-4 rounded-[24px] bg-red-50 p-4 text-sm leading-6 text-red-700">
+            <div className="mt-4 rounded-[24px] bg-red-50 px-4 py-4 text-sm leading-6 text-red-700">
               {error}
             </div>
           ) : null}
         </section>
       </div>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-4 z-30 px-4">
-        <div className="floating-bar pointer-events-auto mx-auto w-full max-w-[398px] space-y-3 p-3">
+      <div className="customer-action-bar">
+        <div className="customer-action-bar-inner space-y-3 px-3 py-3">
           <button
             type="button"
             onClick={() => handleResolve("SUCCESS")}
@@ -182,7 +182,7 @@ export function DemoPaymentClient({
             type="button"
             onClick={() => handleResolve("CANCEL")}
             disabled={isSubmitting !== null}
-            className="w-full rounded-full border border-stone-200 bg-white px-5 py-4 text-sm font-semibold text-stone-700 transition disabled:cursor-wait disabled:opacity-60"
+            className="w-full rounded-full bg-white px-5 py-4 text-sm font-semibold text-stone-700 transition disabled:cursor-wait disabled:opacity-60"
           >
             {isSubmitting === "CANCEL" ? "Отменяем…" : "Отмена"}
           </button>

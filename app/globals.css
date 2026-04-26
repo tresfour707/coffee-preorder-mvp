@@ -4,15 +4,19 @@
 
 :root {
   color-scheme: light;
-  --background: #f6efe3;
-  --background-strong: #fff9f1;
-  --surface: rgba(255, 251, 245, 0.92);
+  --background: #f6efe8;
+  --background-strong: #fffaf6;
+  --surface: rgba(255, 250, 244, 0.88);
   --surface-strong: #ffffff;
-  --line: rgba(148, 110, 69, 0.16);
-  --line-strong: rgba(114, 78, 40, 0.26);
+  --line: rgba(69, 56, 44, 0.12);
+  --line-strong: rgba(69, 56, 44, 0.2);
   --foreground: #1f1712;
-  --muted: #6d6154;
-  --muted-strong: #4c4034;
+  --muted: #726459;
+  --muted-strong: #55493f;
+  --blue-soft: #7fa8ee;
+  --blue-soft-strong: #6a98e6;
+  --peach-soft: #f0c9b8;
+  --cream-soft: #fff7f0;
 }
 
 html,
@@ -27,8 +31,8 @@ html {
 body {
   margin: 0;
   background:
-    radial-gradient(circle at top left, rgba(255, 206, 147, 0.34), transparent 28%),
-    radial-gradient(circle at bottom right, rgba(249, 215, 190, 0.42), transparent 26%),
+    radial-gradient(circle at top left, rgba(142, 173, 236, 0.28), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(240, 201, 184, 0.34), transparent 24%),
     linear-gradient(180deg, var(--background-strong) 0%, var(--background) 100%);
   color: var(--foreground);
   font-family: "Avenir Next", "Arial Nova", "Trebuchet MS", "Segoe UI", sans-serif;
@@ -40,8 +44,8 @@ body::before {
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.18) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.18) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.14) 1px, transparent 1px);
   background-position: center;
   background-size: 28px 28px;
   mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.25), transparent 80%);
@@ -58,7 +62,7 @@ a {
 }
 
 ::selection {
-  background: rgba(201, 162, 119, 0.28);
+  background: rgba(127, 168, 238, 0.24);
 }
 
 input,
@@ -131,28 +135,75 @@ select {
     @apply text-2xl font-semibold tracking-tight text-stone-900 md:text-3xl;
   }
 
-  .mobile-page {
-    @apply mx-auto min-h-screen w-full max-w-[430px] px-4 pb-32 pt-4;
-  }
-
-  .app-card {
-    @apply rounded-[30px] border bg-white shadow-panel;
-    border-color: var(--line);
-  }
-
-  .app-soft-card {
-    @apply rounded-[28px] border;
-    background: rgba(255, 250, 244, 0.82);
-    border-color: var(--line);
-  }
-
-  .floating-bar {
-    @apply rounded-[30px] border shadow-soft backdrop-blur;
-    background: rgba(255, 255, 255, 0.96);
-    border-color: rgba(22, 18, 15, 0.08);
-  }
-
   .poster-tile {
     @apply relative overflow-hidden rounded-[32px] text-white shadow-panel;
   }
+
+  .customer-page {
+    @apply mx-auto min-h-screen w-full max-w-[430px] px-4 pb-10;
+  }
+
+  .customer-top-island {
+    @apply w-full shadow-soft;
+    background:
+      linear-gradient(180deg, rgba(127, 168, 238, 0.98) 0%, rgba(106, 152, 230, 0.98) 100%);
+  }
+
+  .customer-top-island-inner {
+    @apply mx-auto flex min-h-[82px] w-full max-w-[430px] items-center justify-between px-5;
+  }
+
+  .customer-hero {
+    @apply relative overflow-hidden rounded-[34px] border px-5 pb-6 pt-5 shadow-soft;
+    background:
+      radial-gradient(circle at 24% 28%, rgba(206, 194, 177, 0.26), transparent 18%),
+      radial-gradient(circle at 82% 76%, rgba(222, 205, 188, 0.28), transparent 20%),
+      radial-gradient(circle at 16% 88%, rgba(236, 214, 167, 0.22), transparent 16%),
+      linear-gradient(180deg, rgba(242, 242, 239, 0.98) 0%, rgba(250, 247, 243, 0.96) 100%);
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  .customer-soft-card {
+    @apply rounded-[30px] border p-5 shadow-panel backdrop-blur-sm;
+    background: rgba(255, 251, 247, 0.82);
+    border-color: rgba(69, 56, 44, 0.08);
+  }
+
+  .customer-soft-card-strong {
+    @apply rounded-[30px] border bg-white p-5 shadow-panel;
+    border-color: rgba(69, 56, 44, 0.08);
+  }
+
+  .customer-matte-overlay {
+    background: rgba(255, 255, 255, 0.34);
+    -webkit-backdrop-filter: blur(44px) saturate(1.06);
+    backdrop-filter: blur(44px) saturate(1.06);
+  }
+
+  .customer-poster-card {
+    @apply relative overflow-hidden rounded-[32px] px-4 py-5 text-left shadow-panel;
+  }
+
+  .customer-action-bar {
+    @apply fixed inset-x-0 bottom-4 z-30 px-4;
+  }
+
+  .customer-action-bar-inner {
+    @apply mx-auto w-full max-w-[398px] rounded-[28px] border p-3 shadow-soft backdrop-blur-md;
+    background: rgba(255, 251, 247, 0.94);
+    border-color: rgba(69, 56, 44, 0.08);
+  }
+
+  .customer-inline-chip {
+    @apply inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition;
+    border-color: rgba(69, 56, 44, 0.12);
+    background: rgba(255, 255, 255, 0.86);
+  }
+
+  .customer-inline-chip-active {
+    @apply text-white;
+    background: rgba(31, 23, 18, 0.96);
+    border-color: rgba(31, 23, 18, 0.96);
+  }
+
 }

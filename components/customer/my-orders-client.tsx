@@ -29,17 +29,18 @@ export function MyOrdersClient({
     <CustomerMobileShell
       viewer={viewer}
       queueSummary={initialQueueSummary}
+      className="pb-24"
       header={
-        <div>
-          <p className="kicker">Мои заказы</p>
-          <h1 className="mt-2 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
+        <section className="customer-soft-card px-5 py-5">
+          <p className="kicker text-stone-400">История заказов</p>
+          <h1 className="mt-3 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
             История и статусы
           </h1>
-          <p className="mt-3 max-w-[320px] text-sm leading-6 text-stone-600">
+          <p className="mt-3 text-sm leading-6 text-stone-600">
             Здесь видны только ваши online-заказы. Чужие номера и статусы не
             показываются.
           </p>
-        </div>
+        </section>
       }
     >
       {orders.length === 0 ? (
@@ -53,13 +54,13 @@ export function MyOrdersClient({
           }
         />
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {orders.map((order) => (
-            <article key={order.id} className="app-card p-5">
+            <article key={order.id} className="customer-soft-card-strong px-5 py-5">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="kicker">Заказ</p>
-                  <h2 className="mt-2 text-[32px] font-semibold leading-[0.96] tracking-tight text-stone-950">
+                  <p className="kicker text-stone-400">Заказ</p>
+                  <h2 className="mt-3 text-[34px] font-semibold leading-[0.95] tracking-tight text-stone-950">
                     {formatOrderNumber(order.publicOrderNumber)}
                   </h2>
                   <p className="mt-2 text-sm text-stone-500">
@@ -70,7 +71,7 @@ export function MyOrdersClient({
               </div>
 
               <div className="mt-4 grid grid-cols-3 gap-2">
-                <div className="rounded-[22px] bg-stone-50 px-3 py-3">
+                <div className="rounded-[22px] bg-[#fbf5ef] px-3 py-3">
                   <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-stone-400">
                     Сумма
                   </p>
@@ -78,13 +79,13 @@ export function MyOrdersClient({
                     {formatMoney(order.totalPrice)}
                   </p>
                 </div>
-                <div className="rounded-[22px] bg-stone-50 px-3 py-3">
+                <div className="rounded-[22px] bg-[#fbf5ef] px-3 py-3">
                   <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-stone-400">
                     Источник
                   </p>
                   <p className="mt-2 text-sm font-semibold text-stone-900">Онлайн</p>
                 </div>
-                <div className="rounded-[22px] bg-stone-50 px-3 py-3">
+                <div className="rounded-[22px] bg-[#fbf5ef] px-3 py-3">
                   <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-stone-400">
                     Перед вами
                   </p>

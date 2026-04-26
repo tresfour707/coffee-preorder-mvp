@@ -10,11 +10,11 @@ export function QuantityControl({
   onDecrement,
 }: QuantityControlProps) {
   return (
-    <div className="inline-flex items-center rounded-full border border-stone-200 bg-stone-50 p-1 shadow-sm">
+    <div className="inline-flex items-center rounded-full border border-stone-200 bg-white/90 p-1 shadow-sm">
       <button
         type="button"
         onClick={onDecrement}
-        className="flex h-10 w-10 items-center justify-center rounded-full text-lg font-semibold text-stone-700 transition hover:bg-white"
+        className="flex h-10 w-10 items-center justify-center rounded-full text-lg font-semibold text-stone-700 transition hover:bg-stone-100"
       >
         -
       </button>
@@ -24,7 +24,7 @@ export function QuantityControl({
       <button
         type="button"
         onClick={onIncrement}
-        className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-lg font-semibold text-stone-700 transition hover:bg-stone-100"
+        className="flex h-10 w-10 items-center justify-center rounded-full bg-stone-950 text-lg font-semibold text-white transition hover:bg-stone-800"
       >
         +
       </button>

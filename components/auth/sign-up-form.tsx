@@ -54,9 +54,12 @@ export function SignUpForm({ nextPath }: SignUpFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="app-card mx-auto w-full p-6">
+    <form
+      onSubmit={handleSubmit}
+      className="customer-soft-card-strong mx-auto w-full px-5 py-6"
+    >
       <div>
-        <p className="kicker">Demo account</p>
+        <p className="kicker text-stone-400">Demo account</p>
         <h2 className="mt-3 text-[30px] font-semibold leading-[0.98] tracking-tight text-stone-900">
           Создать аккаунт
         </h2>
@@ -108,7 +111,7 @@ export function SignUpForm({ nextPath }: SignUpFormProps) {
       </div>
 
       {error ? (
-        <p className="mt-4 rounded-2xl bg-red-50 p-4 text-sm text-red-700">
+        <p className="mt-4 rounded-[24px] bg-red-50 p-4 text-sm text-red-700">
           {error}
         </p>
       ) : null}
@@ -125,7 +128,7 @@ export function SignUpForm({ nextPath }: SignUpFormProps) {
         Уже есть аккаунт?{" "}
         <Link
           href={`/sign-in?next=${encodeURIComponent(nextPath)}`}
-          className="font-semibold text-stone-900"
+          className="font-semibold text-stone-900 underline decoration-stone-300 underline-offset-4"
         >
           Войти
         </Link>

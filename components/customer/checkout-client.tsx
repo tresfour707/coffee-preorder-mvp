@@ -86,23 +86,30 @@ export function CheckoutClient({
     }
   }
 
+  const header = (
+    <section className="customer-soft-card px-5 py-5">
+      <p className="kicker text-stone-400">Checkout</p>
+      <h1 className="mt-3 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
+        Финальный шаг
+      </h1>
+      <p className="mt-3 text-sm leading-6 text-stone-600">
+        Проверьте состав заказа и выберите demo-сценарий оплаты. Только после
+        успешного подтверждения заказ попадёт в общую очередь.
+      </p>
+    </section>
+  );
+
   if (!isMounted) {
     return (
       <CustomerMobileShell
         viewer={viewer}
         queueSummary={initialQueueSummary}
-        showBottomNav={false}
-        className="pb-40"
-        header={
-          <div>
-            <p className="kicker">Checkout</p>
-            <h1 className="mt-2 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
-              Подготавливаем оплату
-            </h1>
-          </div>
-        }
+        className="pb-32"
+        header={header}
       >
-        <div className="app-card p-6 text-sm text-stone-600">Загружаем корзину…</div>
+        <div className="customer-soft-card px-5 py-6 text-sm text-stone-600">
+          Подготавливаем checkout…
+        </div>
       </CustomerMobileShell>
     );
   }
@@ -112,15 +119,8 @@ export function CheckoutClient({
       <CustomerMobileShell
         viewer={viewer}
         queueSummary={initialQueueSummary}
-        showBottomNav={false}
-        header={
-          <div>
-            <p className="kicker">Checkout</p>
-            <h1 className="mt-2 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
-              Нечего оформлять
-            </h1>
-          </div>
-        }
+        className="pb-32"
+        header={header}
       >
         <EmptyState
           title="Корзина пустая"
@@ -139,82 +139,78 @@ export function CheckoutClient({
     <CustomerMobileShell
       viewer={viewer}
       queueSummary={initialQueueSummary}
-      showBottomNav={false}
-      className="pb-44"
-      header={
-        <div>
-          <p className="kicker">Checkout</p>
-          <h1 className="mt-2 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
-            Подтвердите заказ
-          </h1>
-          <p className="mt-3 max-w-[320px] text-sm leading-6 text-stone-600">
-            Это финальный шаг перед очередью: проверьте состав, выберите способ оплаты
-            и переходите к подтверждению.
-          </p>
-        </div>
-      }
+      className="pb-40"
+      header={header}
     >
-      <div className="space-y-4">
-        <section className="app-card p-5">
-          <p className="kicker">Аккаунт</p>
-          <div className="mt-3 rounded-[24px] bg-stone-50 p-4">
-            <p className="text-xl font-semibold tracking-tight text-stone-950">
+      <div className="space-y-3">
+        <section className="customer-soft-card-strong px-5 py-5">
+          <p className="kicker text-stone-400">Аккаунт</p>
+          <div className="mt-3 rounded-[26px] bg-[#fbf5ef] px-4 py-4">
+            <p className="text-[26px] font-semibold leading-none tracking-tight text-stone-950">
               {viewer.name}
             </p>
-            <p className="mt-1 text-sm text-stone-500">{viewer.email}</p>
+            <p className="mt-2 text-sm text-stone-500">{viewer.email}</p>
           </div>
         </section>
 
-        <section className="app-card p-5">
+        <section className="customer-soft-card-strong px-5 py-5">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <p className="kicker">Оплата</p>
-              <h2 className="mt-2 text-[30px] font-semibold leading-[0.98] tracking-tight text-stone-950">
+              <p className="kicker text-stone-400">Оплата</p>
+              <h2 className="mt-3 text-[30px] font-semibold leading-[0.95] tracking-tight text-stone-950">
                 Выберите сценарий
               </h2>
             </div>
-            <p className="text-sm text-stone-500">Сумма {formatMoney(summary.totalPrice)}</p>
+            <p className="text-sm text-stone-500">{formatMoney(summary.totalPrice)}</p>
           </div>
 
           <div className="mt-4 space-y-3">
             <button
               type="button"
               onClick={() => setMethod("DEMO_CARD")}
-              className={`w-full rounded-[28px] border p-4 text-left transition ${
+              className={`w-full rounded-[28px] px-4 py-4 text-left transition ${
                 method === "DEMO_CARD"
-                  ? "border-stone-950 bg-stone-950 text-white"
-                  : "border-stone-200 bg-stone-50 text-stone-900"
+                  ? "bg-stone-950 text-white"
+                  : "bg-[#fbf5ef] text-stone-900"
               }`}
             >
               <p className="text-lg font-semibold">Демо-карта</p>
-              <p className={`mt-2 text-sm leading-6 ${method === "DEMO_CARD" ? "text-stone-300" : "text-stone-600"}`}>
-                Похоже на обычную оплату банковской картой через отдельный экран.
+              <p
+                className={`mt-2 text-sm leading-6 ${
+                  method === "DEMO_CARD" ? "text-stone-300" : "text-stone-600"
+                }`}
+              >
+                Отдельный экран, который имитирует банковскую оплату.
               </p>
             </button>
 
             <button
               type="button"
               onClick={() => setMethod("DEMO_SBP")}
-              className={`w-full rounded-[28px] border p-4 text-left transition ${
+              className={`w-full rounded-[28px] px-4 py-4 text-left transition ${
                 method === "DEMO_SBP"
-                  ? "border-stone-950 bg-stone-950 text-white"
-                  : "border-stone-200 bg-stone-50 text-stone-900"
+                  ? "bg-stone-950 text-white"
+                  : "bg-[#fbf5ef] text-stone-900"
               }`}
             >
               <p className="text-lg font-semibold">Демо-СБП</p>
-              <p className={`mt-2 text-sm leading-6 ${method === "DEMO_SBP" ? "text-stone-300" : "text-stone-600"}`}>
-                Похоже на мобильную оплату через СБП. Используется только для demo.
+              <p
+                className={`mt-2 text-sm leading-6 ${
+                  method === "DEMO_SBP" ? "text-stone-300" : "text-stone-600"
+                }`}
+              >
+                Mobile-паттерн быстрой оплаты, оставленный в demo-режиме.
               </p>
             </button>
           </div>
         </section>
 
-        <section className="app-card p-5">
+        <section className="customer-soft-card-strong px-5 py-5">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <p className="kicker">Состав заказа</p>
-              <h2 className="mt-2 text-[30px] font-semibold leading-[0.98] tracking-tight text-stone-950">
-                Что вы берёте
+              <p className="kicker text-stone-400">Ваш заказ</p>
+              <h2 className="mt-3 text-[30px] font-semibold leading-[0.95] tracking-tight text-stone-950">
+                Что оплачиваем
               </h2>
             </div>
             <p className="text-sm text-stone-500">{summary.itemsCount} позиций</p>
@@ -222,13 +218,14 @@ export function CheckoutClient({
 
           <div className="mt-4 space-y-3">
             {items.map((item) => (
-              <div key={item.productId} className="rounded-[24px] bg-stone-50 px-4 py-3">
+              <div key={item.productId} className="rounded-[24px] bg-[#fbf5ef] px-4 py-3">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="text-sm font-semibold text-stone-900">
                       {item.quantity} × {item.name}
                     </p>
                     <p className="mt-1 text-sm text-stone-500">
+                      {item.sizeLabel ? `${item.sizeLabel} • ` : ""}
                       {formatMoney(item.price)} за единицу
                     </p>
                   </div>
@@ -242,27 +239,28 @@ export function CheckoutClient({
         </section>
 
         {paymentNotice === "FAILED" ? (
-          <div className="rounded-[28px] bg-red-50 p-4 text-sm leading-6 text-red-700">
-            Демо-оплата завершилась с ошибкой. Корзина сохранена, можно попробовать ещё раз.
+          <div className="rounded-[28px] bg-red-50 px-4 py-4 text-sm leading-6 text-red-700">
+            Демо-оплата завершилась с ошибкой. Корзина сохранена, можно попробовать
+            ещё раз.
           </div>
         ) : null}
 
         {paymentNotice === "CANCELLED" ? (
-          <div className="rounded-[28px] bg-amber-50 p-4 text-sm leading-6 text-amber-800">
+          <div className="rounded-[28px] bg-amber-50 px-4 py-4 text-sm leading-6 text-amber-800">
             Демо-оплата была отменена. Состав заказа остался в корзине.
           </div>
         ) : null}
 
         {error ? (
-          <div className="rounded-[28px] bg-red-50 p-4 text-sm leading-6 text-red-700">
+          <div className="rounded-[28px] bg-red-50 px-4 py-4 text-sm leading-6 text-red-700">
             {error}
           </div>
         ) : null}
       </div>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-4 z-30 px-4">
-        <div className="floating-bar pointer-events-auto mx-auto w-full max-w-[398px] p-3">
-          <div className="flex items-center justify-between gap-4 px-1 pb-3">
+      <div className="customer-action-bar">
+        <div className="customer-action-bar-inner space-y-3 px-3 py-3">
+          <div className="flex items-center justify-between gap-4 px-1">
             <div>
               <p className="text-sm text-stone-500">К оплате</p>
               <p className="mt-1 text-lg font-semibold tracking-tight text-stone-950">
@@ -271,7 +269,7 @@ export function CheckoutClient({
             </div>
             <Link
               href="/cart"
-              className="rounded-full border border-stone-200 px-4 py-2.5 text-sm font-semibold text-stone-700"
+              className="rounded-full bg-stone-100 px-4 py-2.5 text-sm font-semibold text-stone-700"
             >
               Назад
             </Link>

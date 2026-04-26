@@ -20,12 +20,24 @@ type CartClientProps = {
   initialQueueSummary: PublicQueueSummary;
 };
 
-function CartStamp({ label }: { label: string }) {
-  return (
-    <div className="flex h-16 w-16 items-center justify-center rounded-[22px] bg-[#f3d7b5] text-lg font-semibold tracking-tight text-stone-900">
-      {label.slice(0, 2).toUpperCase()}
-    </div>
-  );
+function CartEmoji({ category }: { category: string | null }) {
+  if (category === "Напитки") {
+    return "☕";
+  }
+
+  if (category === "Завтрак") {
+    return "🥐";
+  }
+
+  if (category === "Холодные закуски") {
+    return "🥪";
+  }
+
+  if (category === "Вторые блюда") {
+    return "🍳";
+  }
+
+  return "🍰";
 }
 
 export function CartClient({
@@ -48,21 +60,30 @@ export function CartClient({
 
   const summary = getCartSummary(items);
 
+  const header = (
+    <section className="customer-soft-card px-5 py-5">
+      <p className="kicker text-stone-400">Корзина</p>
+      <h1 className="mt-3 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
+        Проверьте заказ
+      </h1>
+      <p className="mt-3 text-sm leading-6 text-stone-600">
+        Здесь можно быстро изменить количество, удалить позицию и перейти к
+        оформлению.
+      </p>
+    </section>
+  );
+
   if (!isMounted) {
     return (
       <CustomerMobileShell
         viewer={viewer}
         queueSummary={initialQueueSummary}
-        header={
-          <div>
-            <p className="kicker">Корзина</p>
-            <h1 className="mt-2 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
-              Загружаем ваш заказ
-            </h1>
-          </div>
-        }
+        className="pb-28"
+        header={header}
       >
-        <div className="app-card p-6 text-sm text-stone-600">Загрузка корзины…</div>
+        <div className="customer-soft-card px-5 py-6 text-sm text-stone-600">
+          Загружаем корзину…
+        </div>
       </CustomerMobileShell>
     );
   }
@@ -72,22 +93,12 @@ export function CartClient({
       <CustomerMobileShell
         viewer={viewer}
         queueSummary={initialQueueSummary}
-        header={
-          <div>
-            <p className="kicker">Корзина</p>
-            <h1 className="mt-2 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
-              Пока пусто
-            </h1>
-            <p className="mt-3 max-w-[320px] text-sm leading-6 text-stone-600">
-              Вернитесь в меню, откройте нужный товар и добавьте его через product
-              sheet.
-            </p>
-          </div>
-        }
+        className="pb-28"
+        header={header}
       >
         <EmptyState
-          title="Заказ ещё не собран"
-          description="Как только в корзине появятся позиции, здесь можно будет удобно поменять количество и перейти к оформлению."
+          title="Пока пусто"
+          description="Вернитесь в меню, откройте нужную позицию и добавьте её через карточку товара."
           action={
             <Link href="/menu" className="btn-primary">
               Вернуться в меню
@@ -102,39 +113,32 @@ export function CartClient({
     <CustomerMobileShell
       viewer={viewer}
       queueSummary={initialQueueSummary}
-      header={
-        <div>
-          <p className="kicker">Корзина</p>
-          <h1 className="mt-2 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
-            Проверьте заказ
-          </h1>
-          <p className="mt-3 max-w-[320px] text-sm leading-6 text-stone-600">
-            Здесь удобно менять количество, удалять позиции и переходить к
-            оформлению.
-          </p>
-        </div>
-      }
+      className="pb-32"
+      header={header}
     >
-      <div className="space-y-4">
+      <div className="space-y-3">
         {items.map((item) => (
-          <article key={item.productId} className="app-card p-4">
+          <article key={item.productId} className="customer-soft-card-strong px-4 py-4">
             <div className="flex items-start gap-4">
-              <CartStamp label={item.name} />
+              <div className="flex h-[84px] w-[84px] shrink-0 items-center justify-center rounded-[26px] bg-[#f7e6d9] text-[34px]">
+                <span role="img" aria-hidden="true">
+                  <CartEmoji category={item.category} />
+                </span>
+              </div>
 
               <div className="min-w-0 flex-1">
                 {item.category ? (
-                  <p className="kicker">{item.category}</p>
-                ) : null}
-                <h2 className="mt-2 text-[24px] font-semibold leading-[0.98] tracking-tight text-stone-950">
-                  {item.name}
-                </h2>
-                {item.description ? (
-                  <p className="mt-2 text-sm leading-6 text-stone-500">
-                    {item.description}
+                  <p className="text-xs uppercase tracking-[0.16em] text-stone-400">
+                    {item.category}
                   </p>
                 ) : null}
-
-                <div className="mt-4 flex items-center justify-between gap-4">
+                <h2 className="mt-2 text-[24px] font-semibold leading-[0.96] tracking-tight text-stone-950">
+                  {item.name}
+                </h2>
+                {item.sizeLabel ? (
+                  <p className="mt-2 text-sm text-stone-500">{item.sizeLabel}</p>
+                ) : null}
+                <div className="mt-4 flex items-end justify-between gap-4">
                   <div>
                     <p className="text-sm text-stone-500">
                       {formatMoney(item.price)} за единицу
@@ -147,7 +151,7 @@ export function CartClient({
                   <button
                     type="button"
                     onClick={() => removeProduct(ownerKey, item.productId)}
-                    className="rounded-full border border-stone-200 px-4 py-2 text-sm font-semibold text-stone-600"
+                    className="rounded-full bg-stone-100 px-4 py-2 text-sm font-semibold text-stone-700"
                   >
                     Удалить
                   </button>
@@ -155,48 +159,46 @@ export function CartClient({
               </div>
             </div>
 
-            <div className="mt-4 rounded-[24px] bg-stone-50 p-3">
-              <div className="flex items-center justify-between gap-3">
-                <p className="text-sm font-medium text-stone-500">Количество</p>
-                <QuantityControl
-                  quantity={item.quantity}
-                  onIncrement={() =>
-                    addProduct(ownerKey, {
-                      id: item.productId,
-                      name: item.name,
-                      displayName: item.name,
-                      description: item.description,
-                      price: item.price,
-                      kind: "FOOD",
-                      category: item.category,
-                      groupKey: item.productId,
-                      sizeLabel: item.sizeLabel,
-                      sizeSort: null,
-                      available: true,
-                    })
-                  }
-                  onDecrement={() => decrementProduct(ownerKey, item.productId)}
-                />
-              </div>
+            <div className="mt-4 flex items-center justify-between gap-3 rounded-[24px] bg-[#fbf5ef] px-4 py-3">
+              <p className="text-sm font-medium text-stone-500">Количество</p>
+              <QuantityControl
+                quantity={item.quantity}
+                onIncrement={() =>
+                  addProduct(ownerKey, {
+                    id: item.productId,
+                    name: item.name,
+                    displayName: item.name,
+                    description: item.description,
+                    price: item.price,
+                    kind: item.category === "Напитки" ? "DRINK" : "FOOD",
+                    category: item.category,
+                    groupKey: item.productId,
+                    sizeLabel: item.sizeLabel,
+                    sizeSort: null,
+                    available: true,
+                  })
+                }
+                onDecrement={() => decrementProduct(ownerKey, item.productId)}
+              />
             </div>
           </article>
         ))}
       </div>
 
-      <div className="mt-5 app-soft-card p-4">
-        <p className="kicker">Дальше по шагам</p>
-        <div className="mt-4 grid gap-3">
-          <div className="rounded-[24px] bg-white px-4 py-3 text-sm text-stone-600 shadow-sm">
-            1. Подтверждаете заказ и выбираете demo-способ оплаты.
+      <section className="mt-5 customer-soft-card px-5 py-5">
+        <p className="kicker text-stone-400">Что дальше</p>
+        <div className="mt-4 space-y-3">
+          <div className="rounded-[24px] bg-white px-4 py-3 text-sm leading-6 text-stone-600 shadow-sm">
+            1. Подтверждаете состав и выбираете demo-оплату.
           </div>
-          <div className="rounded-[24px] bg-white px-4 py-3 text-sm text-stone-600 shadow-sm">
+          <div className="rounded-[24px] bg-white px-4 py-3 text-sm leading-6 text-stone-600 shadow-sm">
             2. После `Success` заказ получает номер и попадает в общую очередь.
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-24 z-30 px-4">
-        <div className="floating-bar pointer-events-auto mx-auto flex w-full max-w-[398px] items-center justify-between gap-4 px-4 py-3">
+      <div className="customer-action-bar">
+        <div className="customer-action-bar-inner flex items-center justify-between gap-4 px-4 py-3">
           <div>
             <p className="text-sm text-stone-500">{summary.itemsCount} позиций</p>
             <p className="mt-1 text-lg font-semibold tracking-tight text-stone-950">
@@ -205,7 +207,7 @@ export function CartClient({
           </div>
           <Link
             href="/checkout"
-            className="rounded-full bg-stone-950 px-4 py-3 text-sm font-semibold text-white"
+            className="rounded-full bg-stone-950 px-5 py-3 text-sm font-semibold text-white"
           >
             К оформлению
           </Link>

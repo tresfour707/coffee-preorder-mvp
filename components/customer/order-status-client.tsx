@@ -22,7 +22,7 @@ const progressSteps = [
   {
     id: "paid",
     title: "Оплата подтверждена",
-    description: "Заказ создан и получил публичный номер.",
+    description: "Заказ создан и получил номер.",
   },
   {
     id: "queue",
@@ -162,39 +162,40 @@ export function OrderStatusClient({
   return (
     <CustomerMobileShell
       viewer={viewer}
-      showBottomNav={false}
-      className="pb-12"
+      className="pb-28"
       header={
-        <div>
-          <p className="kicker">Статус заказа</p>
-          <h1 className="mt-2 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
+        <section className="customer-soft-card px-5 py-5">
+          <p className="kicker text-stone-400">Статус заказа</p>
+          <h1 className="mt-3 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
             Следите за выдачей
           </h1>
-          <p className="mt-3 max-w-[320px] text-sm leading-6 text-stone-600">
-            Экран обновляется автоматически и показывает только ваш заказ.
+          <p className="mt-3 text-sm leading-6 text-stone-600">
+            Экран обновляется автоматически и показывает только ваш online-заказ.
           </p>
-        </div>
+        </section>
       }
     >
-      <section className="app-card overflow-hidden">
-        <div className="bg-[linear-gradient(180deg,#f7e0bf_0%,#f3c98f_100%)] px-5 py-6">
-          <p className="kicker text-stone-700">Номер заказа</p>
-          <h2 className="mt-2 text-[56px] font-semibold leading-none tracking-tight text-stone-950">
+      <section className="overflow-hidden rounded-[32px] shadow-soft">
+        <div className="bg-[linear-gradient(180deg,#7fa8ee_0%,#6a98e6_100%)] px-5 py-6 text-white">
+          <p className="text-xs uppercase tracking-[0.18em] text-white/76">номер заказа</p>
+          <h2 className="mt-3 text-[58px] font-semibold leading-none tracking-tight">
             {formatOrderNumber(order.publicOrderNumber)}
           </h2>
-          <p className="mt-3 text-sm leading-6 text-stone-700">{getQueueMessage(order)}</p>
+          <p className="mt-3 max-w-[240px] text-sm leading-6 text-white/88">
+            {getQueueMessage(order)}
+          </p>
         </div>
 
-        <div className="space-y-4 p-5">
+        <div className="customer-soft-card-strong rounded-t-none px-5 py-5">
           <div className="flex items-center justify-between gap-4">
             <StatusBadge status={order.status} className="text-sm" />
-            <div className="rounded-full bg-stone-100 px-4 py-2 text-sm font-semibold text-stone-600">
+            <span className="rounded-full bg-[#fbf5ef] px-4 py-2 text-sm font-semibold text-stone-700">
               {sourceLabels[order.source]}
-            </div>
+            </span>
           </div>
 
-          <div className="grid grid-cols-3 gap-2">
-            <div className="rounded-[22px] bg-stone-50 px-3 py-3">
+          <div className="mt-4 grid grid-cols-3 gap-2">
+            <div className="rounded-[22px] bg-[#fbf5ef] px-3 py-3">
               <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-stone-400">
                 Перед вами
               </p>
@@ -202,7 +203,7 @@ export function OrderStatusClient({
                 {order.status === "CANCELLED" ? "—" : order.ordersAhead}
               </p>
             </div>
-            <div className="rounded-[22px] bg-stone-50 px-3 py-3">
+            <div className="rounded-[22px] bg-[#fbf5ef] px-3 py-3">
               <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-stone-400">
                 Подтверждён
               </p>
@@ -210,7 +211,7 @@ export function OrderStatusClient({
                 {formatDateTime(order.confirmedAt)}
               </p>
             </div>
-            <div className="rounded-[22px] bg-stone-50 px-3 py-3">
+            <div className="rounded-[22px] bg-[#fbf5ef] px-3 py-3">
               <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-stone-400">
                 Сумма
               </p>
@@ -223,8 +224,8 @@ export function OrderStatusClient({
       </section>
 
       {order.status !== "CANCELLED" ? (
-        <section className="mt-4 app-card p-5">
-          <p className="kicker">Прогресс</p>
+        <section className="mt-4 customer-soft-card-strong px-5 py-5">
+          <p className="kicker text-stone-400">Прогресс</p>
           <div className="mt-4 space-y-3">
             {progressSteps.map((step, index) => {
               const isDone = progressStage > index;
@@ -233,17 +234,17 @@ export function OrderStatusClient({
               return (
                 <div
                   key={step.id}
-                  className={`rounded-[24px] border p-4 ${
+                  className={`rounded-[26px] px-4 py-4 ${
                     isActive
-                      ? "border-stone-950 bg-stone-950 text-white"
+                      ? "bg-stone-950 text-white"
                       : isDone
-                        ? "border-emerald-200 bg-emerald-50 text-emerald-900"
-                        : "border-stone-200 bg-stone-50 text-stone-700"
+                        ? "bg-emerald-50 text-emerald-900"
+                        : "bg-[#fbf5ef] text-stone-700"
                   }`}
                 >
                   <div className="flex gap-3">
                     <div
-                      className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                      className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
                         isActive
                           ? "bg-white text-stone-950"
                           : isDone
@@ -274,16 +275,16 @@ export function OrderStatusClient({
           </div>
         </section>
       ) : (
-        <section className="mt-4 rounded-[28px] bg-stone-100 p-5 text-sm leading-6 text-stone-700">
+        <section className="mt-4 rounded-[28px] bg-stone-100 px-5 py-5 text-sm leading-6 text-stone-700">
           Заказ отменён и больше не участвует в очереди.
         </section>
       )}
 
-      <section className="mt-4 app-card p-5">
+      <section className="mt-4 customer-soft-card-strong px-5 py-5">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <p className="kicker">Состав заказа</p>
-            <h2 className="mt-2 text-[30px] font-semibold leading-[0.98] tracking-tight text-stone-950">
+            <p className="kicker text-stone-400">Состав заказа</p>
+            <h2 className="mt-3 text-[30px] font-semibold leading-[0.95] tracking-tight text-stone-950">
               Что входит
             </h2>
           </div>
@@ -292,7 +293,7 @@ export function OrderStatusClient({
 
         <div className="mt-4 space-y-3">
           {order.items.map((item) => (
-            <div key={item.id} className="rounded-[24px] bg-stone-50 px-4 py-3">
+            <div key={item.id} className="rounded-[24px] bg-[#fbf5ef] px-4 py-3">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-sm font-semibold text-stone-900">{item.productName}</p>
@@ -310,7 +311,7 @@ export function OrderStatusClient({
       </section>
 
       {order.canCancel ? (
-        <section className="mt-4 rounded-[28px] bg-amber-50 p-5">
+        <section className="mt-4 rounded-[28px] bg-amber-50 px-5 py-5">
           <p className="text-sm leading-6 text-amber-900">
             Пока заказ находится в ожидании, его можно отменить. После перехода в
             активное приготовление отмена уже недоступна.
@@ -327,7 +328,7 @@ export function OrderStatusClient({
       ) : null}
 
       {error ? (
-        <section className="mt-4 rounded-[28px] bg-red-50 p-4 text-sm leading-6 text-red-700">
+        <section className="mt-4 rounded-[28px] bg-red-50 px-4 py-4 text-sm leading-6 text-red-700">
           {error}
         </section>
       ) : null}
