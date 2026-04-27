@@ -9,16 +9,19 @@ import type { PublicQueueSummary, ViewerSummary } from "@/lib/types";
 type ProfileClientProps = {
   viewer: ViewerSummary;
   initialQueueSummary: PublicQueueSummary;
+  queueHeadline: string;
 };
 
 export function ProfileClient({
   viewer,
   initialQueueSummary,
+  queueHeadline,
 }: ProfileClientProps) {
   return (
     <CustomerMobileShell
       viewer={viewer}
       queueSummary={initialQueueSummary}
+      queueHeadline={queueHeadline}
       className="pb-24"
       header={
         <section className="customer-soft-card px-5 py-5">

@@ -24,12 +24,14 @@ type CheckoutClientProps = {
   viewer: ViewerSummary;
   paymentNotice?: "FAILED" | "CANCELLED" | null;
   initialQueueSummary: PublicQueueSummary;
+  queueHeadline: string;
 };
 
 export function CheckoutClient({
   viewer,
   paymentNotice = null,
   initialQueueSummary,
+  queueHeadline,
 }: CheckoutClientProps) {
   const router = useRouter();
   const ownerKey = getCartOwnerKey(viewer.id);
@@ -104,6 +106,7 @@ export function CheckoutClient({
       <CustomerMobileShell
         viewer={viewer}
         queueSummary={initialQueueSummary}
+        queueHeadline={queueHeadline}
         className="pb-32"
         header={header}
       >
@@ -119,6 +122,7 @@ export function CheckoutClient({
       <CustomerMobileShell
         viewer={viewer}
         queueSummary={initialQueueSummary}
+        queueHeadline={queueHeadline}
         className="pb-32"
         header={header}
       >
@@ -139,6 +143,7 @@ export function CheckoutClient({
     <CustomerMobileShell
       viewer={viewer}
       queueSummary={initialQueueSummary}
+      queueHeadline={queueHeadline}
       className="pb-40"
       header={header}
     >

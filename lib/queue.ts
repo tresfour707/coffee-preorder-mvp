@@ -1,4 +1,5 @@
 import {
+  OrderSource,
   OrderStatus,
   Prisma,
   PrismaClient,
@@ -136,6 +137,60 @@ export function serializeOrderDetails(
     canCancel:
       order.source === "ONLINE" && visibleStatus === OrderStatus.WAITING,
   };
+}
+
+function getOrdersWord(count: number) {
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+
+  if (mod10 === 1 && mod100 !== 11) {
+    return "заказ";
+  }
+
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
+    return "заказа";
+  }
+
+  return "заказов";
+}
+
+export async function getQueueHeadline(
+  viewerUserId?: string,
+  db: DbClient = prisma,
+): Promise<string> {
+  const activeOrders = await db.order.findMany({
+    where: {
+      status: {
+        in: activeQueueStatuses,
+      },
+    },
+    orderBy: queueOrderBy,
+    select: {
+      userId: true,
+      source: true,
+      status: true,
+    },
+  });
+
+  if (viewerUserId) {
+    const viewerIndex = activeOrders.findIndex(
+      (order) => order.source === OrderSource.ONLINE && order.userId === viewerUserId,
+    );
+
+    if (viewerIndex === 0) {
+      return "Готовим ваш заказ";
+    }
+
+    if (viewerIndex > 0) {
+      return `Перед вами ${viewerIndex} ${getOrdersWord(viewerIndex)}`;
+    }
+  }
+
+  if (activeOrders.length === 0) {
+    return "Нет заказов";
+  }
+
+  return `Перед вами ${activeOrders.length} ${getOrdersWord(activeOrders.length)}`;
 }
 
 export async function ensureQueueState(db: DbClient) {

@@ -199,7 +199,7 @@ export function CategoryMenuClient({
                 >
                   <ProductArtwork
                     product={product}
-                    className="h-[150px] rounded-[18px]"
+                    className="h-[170px] rounded-[18px]"
                   />
 
                   <div className="px-1 pb-1 pt-3">

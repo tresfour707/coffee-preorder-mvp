@@ -18,17 +18,20 @@ type MyOrdersClientProps = {
   viewer: ViewerSummary;
   orders: UserOrderSummary[];
   initialQueueSummary: PublicQueueSummary;
+  queueHeadline: string;
 };
 
 export function MyOrdersClient({
   viewer,
   orders,
   initialQueueSummary,
+  queueHeadline,
 }: MyOrdersClientProps) {
   return (
     <CustomerMobileShell
       viewer={viewer}
       queueSummary={initialQueueSummary}
+      queueHeadline={queueHeadline}
       className="pb-24"
       header={
         <section className="customer-soft-card px-5 py-5">

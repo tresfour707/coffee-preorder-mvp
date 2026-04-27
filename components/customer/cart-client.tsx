@@ -18,6 +18,7 @@ import type { PublicQueueSummary, ViewerSummary } from "@/lib/types";
 type CartClientProps = {
   viewer: ViewerSummary | null;
   initialQueueSummary: PublicQueueSummary;
+  queueHeadline: string;
 };
 
 function CartEmoji({ category }: { category: string | null }) {
@@ -43,6 +44,7 @@ function CartEmoji({ category }: { category: string | null }) {
 export function CartClient({
   viewer,
   initialQueueSummary,
+  queueHeadline,
 }: CartClientProps) {
   const ownerKey = getCartOwnerKey(viewer?.id);
   const items = useCustomerCartStore(selectCartByOwner(ownerKey));
@@ -78,6 +80,7 @@ export function CartClient({
       <CustomerMobileShell
         viewer={viewer}
         queueSummary={initialQueueSummary}
+        queueHeadline={queueHeadline}
         className="pb-28"
         header={header}
       >
@@ -93,6 +96,7 @@ export function CartClient({
       <CustomerMobileShell
         viewer={viewer}
         queueSummary={initialQueueSummary}
+        queueHeadline={queueHeadline}
         className="pb-28"
         header={header}
       >
@@ -113,6 +117,7 @@ export function CartClient({
     <CustomerMobileShell
       viewer={viewer}
       queueSummary={initialQueueSummary}
+      queueHeadline={queueHeadline}
       className="pb-32"
       header={header}
     >

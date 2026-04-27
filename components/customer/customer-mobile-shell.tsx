@@ -13,61 +13,61 @@ type CustomerMobileShellProps = {
   viewer: ViewerSummary | null;
   header?: ReactNode;
   queueSummary?: PublicQueueSummary | null;
+  queueHeadline?: string;
+  queueClassName?: string;
+  contentClassName?: string;
   className?: string;
   children: ReactNode;
 };
-
-function getOrdersWord(count: number) {
-  const mod10 = count % 10;
-  const mod100 = count % 100;
-
-  if (mod10 === 1 && mod100 !== 11) {
-    return "заказ";
-  }
-
-  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
-    return "заказа";
-  }
-
-  return "заказов";
-}
-
-function QueueStrip({ queueSummary }: { queueSummary: PublicQueueSummary }) {
-  const waitingText =
-    queueSummary.activeOrdersCount > 0
-      ? `Перед вами ${queueSummary.activeOrdersCount} ${getOrdersWord(
-          queueSummary.activeOrdersCount,
-        )}`
-      : "Перед вами никого, очередь свободна";
+function QueueStrip({
+  queueSummary,
+  queueHeadline,
+  className,
+}: {
+  queueSummary: PublicQueueSummary;
+  queueHeadline?: string;
+  className?: string;
+}) {
+  const fallbackHeadline =
+    queueSummary.activeOrdersCount === 0
+      ? "Нет заказов"
+      : `Перед вами ${queueSummary.activeOrdersCount} заказов`;
+  const headline = queueHeadline ?? fallbackHeadline;
 
   return (
-    <section className="relative mt-4 overflow-hidden rounded-[28px] border border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(249,246,239,0.92))] px-4 py-4 shadow-[0_14px_30px_rgba(31,23,18,0.08)]">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -right-6 top-[-18px] h-28 w-28 rounded-full bg-[#dff3cb]/70 blur-2xl" />
-        <div className="absolute left-[-10px] bottom-[-28px] h-24 w-24 rounded-full bg-[#dce8ff]/80 blur-2xl" />
-        <div className="absolute inset-x-8 top-0 h-px bg-white/90" />
-      </div>
-
-      <div className="relative flex items-center gap-3">
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[20px] bg-[#dff3cb] shadow-[inset_0_2px_0_rgba(255,255,255,0.88),0_10px_20px_rgba(125,176,83,0.15)]">
-          <span className="text-[22px] font-black tracking-tight text-[#5e9c3a]">
-            {queueSummary.activeOrdersCount}
-          </span>
-        </div>
-
-        <div className="min-w-0">
-          <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-stone-400">
-            Очередь
-          </p>
-          <p className="mt-1 text-[17px] font-semibold leading-6 tracking-tight text-stone-950">
-            {waitingText}
-          </p>
-          <p className="mt-1 text-[13px] leading-5 text-stone-500">
-            Онлайн и офлайн заказы идут в одном потоке.
-          </p>
-        </div>
-      </div>
+    <section className={cn("mt-5 flex justify-center px-1", className)}>
+      <p className="text-center text-[24px] font-medium tracking-tight text-stone-900">
+        {headline}
+      </p>
     </section>
+  );
+}
+
+function MenuIcon() {
+  return (
+    <span className="relative block h-[18px] w-[28px]">
+      <span className="absolute left-0 top-0 h-[3px] w-[28px] rounded-full bg-stone-950" />
+      <span className="absolute left-0 top-[7px] h-[3px] w-[28px] rounded-full bg-stone-950" />
+      <span className="absolute left-0 top-[14px] h-[3px] w-[28px] rounded-full bg-stone-950" />
+    </span>
+  );
+}
+
+function AccountIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className="h-[28px] w-[28px] text-stone-950"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.9"
+    >
+      <circle cx="12" cy="8" r="3.2" />
+      <path d="M5 19.5c1.4-3 4-4.7 7-4.7s5.6 1.7 7 4.7" />
+    </svg>
   );
 }
 
@@ -75,32 +75,31 @@ export function CustomerMobileShell({
   viewer,
   header,
   queueSummary,
+  queueHeadline,
+  queueClassName,
+  contentClassName,
   className,
   children,
 }: CustomerMobileShellProps) {
   const pathname = usePathname();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activePanel, setActivePanel] = useState<"menu" | "account" | null>(null);
   const myOrdersHref = useMemo(
     () => (viewer ? "/orders" : `/sign-in?next=${encodeURIComponent("/orders")}`),
     [viewer],
   );
-  const profileHref = useMemo(
-    () => (viewer ? "/profile" : `/sign-in?next=${encodeURIComponent("/profile")}`),
-    [viewer],
-  );
 
   useEffect(() => {
-    setIsMenuOpen(false);
+    setActivePanel(null);
   }, [pathname]);
 
   useEffect(() => {
-    if (!isMenuOpen) {
+    if (!activePanel) {
       return;
     }
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setIsMenuOpen(false);
+        setActivePanel(null);
       }
     };
 
@@ -112,59 +111,78 @@ export function CustomerMobileShell({
       document.body.style.overflow = originalOverflow;
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [isMenuOpen]);
+  }, [activePanel]);
+
+  const isMenuOpen = activePanel === "menu";
+  const isAccountOpen = activePanel === "account";
 
   return (
     <main className="min-h-screen overflow-x-hidden">
       <div className="fixed inset-x-0 top-0 z-40 w-full">
         <div className="customer-top-island">
           <div className="customer-top-island-inner">
-            <Link href="/menu" aria-label="Открыть главный экран">
-              <BrandMark tone="light" size="md" />
+            <button
+              type="button"
+              onClick={() => setActivePanel("menu")}
+              aria-label="Открыть меню"
+              className="flex h-11 w-11 items-center justify-center justify-self-start rounded-full transition active:scale-[0.96]"
+            >
+              <MenuIcon />
+            </button>
+
+            <Link
+              href="/menu"
+              aria-label="Открыть главный экран"
+              className="justify-self-center"
+            >
+              <BrandMark tone="coffee" size="md" />
             </Link>
 
             <button
               type="button"
-              onClick={() => setIsMenuOpen(true)}
-              aria-label="Открыть меню"
-              className="flex h-12 w-12 items-center justify-center transition hover:bg-white/10"
+              onClick={() => setActivePanel("account")}
+              aria-label={viewer ? "Открыть профиль" : "Открыть вход и регистрацию"}
+              className="flex h-11 w-11 items-center justify-center justify-self-end rounded-full transition active:scale-[0.96]"
             >
-              <span className="relative block h-5 w-8">
-                <span className="absolute left-0 top-0 h-[6px] w-8 rounded-full bg-white" />
-                <span className="absolute left-0 top-[12px] h-[6px] w-8 rounded-full bg-white" />
-              </span>
+              <AccountIcon />
             </button>
           </div>
         </div>
       </div>
 
-      <div className="customer-page pt-[94px]">
+      <div className="customer-page pt-[98px]">
         <div className={cn("pb-10 pt-4", className)}>
           {header ? <div>{header}</div> : null}
-          {queueSummary ? <QueueStrip queueSummary={queueSummary} /> : null}
-          <div className="mt-5">{children}</div>
+          {queueSummary ? (
+            <QueueStrip
+              queueSummary={queueSummary}
+              queueHeadline={queueHeadline}
+              className={queueClassName}
+            />
+          ) : null}
+          <div className={cn("mt-5", contentClassName)}>{children}</div>
         </div>
       </div>
 
       <div
         className={cn(
           "fixed inset-0 z-50 transition",
-          isMenuOpen ? "pointer-events-auto" : "pointer-events-none",
+          activePanel ? "pointer-events-auto" : "pointer-events-none",
         )}
-        aria-hidden={!isMenuOpen}
+        aria-hidden={!activePanel}
       >
         <div
           className={cn(
             "absolute inset-0 bg-white/6 transition-opacity duration-300",
-            isMenuOpen ? "opacity-100" : "opacity-0",
+            activePanel ? "opacity-100" : "opacity-0",
           )}
-          onClick={() => setIsMenuOpen(false)}
+          onClick={() => setActivePanel(null)}
         />
 
         <aside
           className={cn(
-            "customer-matte-overlay absolute inset-y-0 right-0 isolate flex w-full max-w-[430px] flex-col overflow-hidden px-5 pb-8 pt-6 transition-transform duration-300",
-            isMenuOpen ? "translate-x-0" : "translate-x-full",
+            "customer-matte-overlay absolute inset-y-0 left-0 isolate flex w-full max-w-[430px] flex-col overflow-hidden px-5 pb-8 pt-6 transition-transform duration-300",
+            isMenuOpen ? "translate-x-0" : "-translate-x-full",
           )}
         >
           <div className="pointer-events-none absolute inset-0 bg-white/42" />
@@ -177,13 +195,13 @@ export function CustomerMobileShell({
           </div>
 
           <div className="relative z-10 flex items-center justify-center pt-16">
-            <Link href="/menu" onClick={() => setIsMenuOpen(false)}>
+            <Link href="/menu" onClick={() => setActivePanel(null)}>
               <BrandMark tone="dark" size="md" />
             </Link>
 
             <button
               type="button"
-              onClick={() => setIsMenuOpen(false)}
+              onClick={() => setActivePanel(null)}
               aria-label="Закрыть меню"
               className="absolute right-0 top-0 flex h-12 w-12 items-center justify-center text-[34px] font-light leading-none text-stone-700"
             >
@@ -195,43 +213,130 @@ export function CustomerMobileShell({
             <nav className="space-y-5 text-center">
               <Link
                 href="/menu#categories"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => setActivePanel(null)}
                 className="block text-[28px] font-normal tracking-tight text-stone-950"
               >
                 Меню
               </Link>
               <Link
                 href={myOrdersHref}
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => setActivePanel(null)}
                 className="block text-[28px] font-normal tracking-tight text-stone-950"
               >
                 История заказов
               </Link>
-              {viewer ? (
-                <Link
-                  href={profileHref}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block text-[28px] font-normal tracking-tight text-stone-950"
-                >
-                  Профиль
-                </Link>
-              ) : null}
             </nav>
+          </div>
+        </aside>
+
+        <aside
+          className={cn(
+            "customer-matte-overlay absolute inset-y-0 right-0 isolate flex w-full max-w-[430px] flex-col overflow-hidden px-5 pb-8 pt-6 transition-transform duration-300",
+            isAccountOpen ? "translate-x-0" : "translate-x-full",
+          )}
+        >
+          <div className="pointer-events-none absolute inset-0 bg-white/42" />
+          <div className="pointer-events-none absolute inset-0">
+            <div className="absolute left-[-12%] top-[12%] h-[290px] w-[290px] rounded-full bg-[#d7c5ba]/38 blur-[95px]" />
+            <div className="absolute right-[-18%] top-[24%] h-[270px] w-[270px] rounded-full bg-[#f1dfce]/30 blur-[110px]" />
+            <div className="absolute left-[6%] bottom-[8%] h-[240px] w-[240px] rounded-full bg-[#efe0bf]/24 blur-[90px]" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.34)_0%,rgba(255,255,255,0.16)_18%,rgba(255,255,255,0.22)_100%)]" />
+          </div>
+
+          <div className="relative z-10 flex items-center justify-center pt-14">
+            <BrandMark tone="dark" size="md" />
+
+            <button
+              type="button"
+              onClick={() => setActivePanel(null)}
+              aria-label="Закрыть аккаунт"
+              className="absolute right-0 top-0 flex h-12 w-12 items-center justify-center text-[34px] font-light leading-none text-stone-700"
+            >
+              ×
+            </button>
           </div>
 
           {!viewer ? (
-            <div className="relative z-10 pt-4 text-center">
-              <Link
-                href="/sign-in?next=%2Forders"
-                onClick={() => setIsMenuOpen(false)}
-                className="mx-auto flex min-h-14 w-full max-w-[272px] items-center justify-center rounded-full bg-stone-950 px-6 py-4 text-[18px] font-black tracking-tight text-white shadow-[0_20px_50px_rgba(31,23,18,0.22)]"
-              >
-                Войти
-              </Link>
+            <div className="relative z-10 flex flex-1 flex-col justify-center pb-8 pt-10 text-center">
+              <div className="mx-auto max-w-[290px]">
+                <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-stone-400">
+                  Аккаунт
+                </p>
+                <h2 className="mt-4 text-[38px] font-semibold leading-[0.96] tracking-tight text-stone-950">
+                  Вход и регистрация
+                </h2>
+                <p className="mt-4 text-sm leading-6 text-stone-600">
+                  Для online-заказов используем ваш demo-аккаунт: у него свои корзина,
+                  история и доступ к статусам заказов.
+                </p>
+              </div>
+
+              <div className="mx-auto mt-8 flex w-full max-w-[282px] flex-col gap-3">
+                <Link
+                  href="/sign-in?next=%2Fmenu"
+                  onClick={() => setActivePanel(null)}
+                  className="flex min-h-14 items-center justify-center rounded-full bg-stone-950 px-6 py-4 text-[17px] font-black tracking-tight text-white shadow-[0_20px_50px_rgba(31,23,18,0.22)]"
+                >
+                  Войти
+                </Link>
+                <Link
+                  href="/sign-up?next=%2Fmenu"
+                  onClick={() => setActivePanel(null)}
+                  className="flex min-h-14 items-center justify-center rounded-full border border-white/80 bg-white/70 px-6 py-4 text-[17px] font-bold tracking-tight text-stone-950 shadow-[0_18px_42px_rgba(31,23,18,0.08)] backdrop-blur-xl"
+                >
+                  Создать аккаунт
+                </Link>
+              </div>
             </div>
           ) : (
-            <div className="relative z-10 pt-4">
-              <SignOutButton className="mx-auto flex min-h-14 w-full max-w-[272px] items-center justify-center rounded-full bg-stone-950 px-6 py-4 text-[18px] font-black tracking-tight text-white shadow-[0_20px_50px_rgba(31,23,18,0.22)] disabled:cursor-wait disabled:opacity-60" />
+            <div className="relative z-10 flex flex-1 flex-col justify-center pb-8 pt-10">
+              <div className="mx-auto w-full max-w-[300px] space-y-4">
+                <div className="text-center">
+                  <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-stone-400">
+                    Профиль
+                  </p>
+                  <h2 className="mt-4 text-[38px] font-semibold leading-[0.96] tracking-tight text-stone-950">
+                    Аккаунт
+                  </h2>
+                </div>
+
+                <section className="rounded-[28px] border border-white/80 bg-white/74 px-5 py-5 shadow-[0_18px_42px_rgba(31,23,18,0.08)] backdrop-blur-xl">
+                  <p className="text-[11px] uppercase tracking-[0.16em] text-stone-400">
+                    Имя
+                  </p>
+                  <p className="mt-2 text-[28px] font-semibold leading-none tracking-tight text-stone-950">
+                    {viewer.name}
+                  </p>
+
+                  <p className="mt-5 text-[11px] uppercase tracking-[0.16em] text-stone-400">
+                    Email
+                  </p>
+                  <p className="mt-2 text-sm font-semibold text-stone-900">{viewer.email}</p>
+                </section>
+
+                <section className="rounded-[28px] border border-white/80 bg-white/74 px-5 py-5 shadow-[0_18px_42px_rgba(31,23,18,0.08)] backdrop-blur-xl">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-stone-400">
+                        Карты
+                      </p>
+                      <p className="mt-2 text-[24px] font-semibold leading-none tracking-tight text-stone-950">
+                        Подключим позже
+                      </p>
+                    </div>
+                    <span className="rounded-full bg-[#f6efe8] px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-stone-500">
+                      demo
+                    </span>
+                  </div>
+
+                  <p className="mt-4 text-sm leading-6 text-stone-600">
+                    Пока оплата выбирается на checkout, а сохранённые карты добавим
+                    следующим этапом.
+                  </p>
+                </section>
+
+                <SignOutButton className="flex min-h-14 w-full items-center justify-center rounded-full bg-stone-950 px-6 py-4 text-[17px] font-black tracking-tight text-white shadow-[0_20px_50px_rgba(31,23,18,0.22)] disabled:cursor-wait disabled:opacity-60" />
+              </div>
             </div>
           )}
         </aside>

@@ -1,11 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 import { FloatingCartLink } from "@/components/customer/floating-cart-link";
 import { CustomerMobileShell } from "@/components/customer/customer-mobile-shell";
-import { ProductArtwork } from "@/components/customer/product-artwork";
 import { getCartSummary } from "@/lib/cart";
 import {
   getCartOwnerKey,
@@ -22,12 +22,14 @@ type MenuClientProps = {
   products: MenuProductSummary[];
   viewer: ViewerSummary | null;
   initialQueueSummary: PublicQueueSummary;
+  queueHeadline: string;
 };
 
 export function MenuClient({
   products,
   viewer,
   initialQueueSummary,
+  queueHeadline,
 }: MenuClientProps) {
   const ownerKey = getCartOwnerKey(viewer?.id);
   const items = useCustomerCartStore(selectCartByOwner(ownerKey));
@@ -47,6 +49,9 @@ export function MenuClient({
     <CustomerMobileShell
       viewer={viewer}
       queueSummary={initialQueueSummary}
+      queueHeadline={queueHeadline}
+      queueClassName="mt-0 pb-7 pt-1"
+      contentClassName="mt-0"
       className="pb-28 pt-0"
     >
       <section id="categories" className="grid grid-cols-2 gap-3">
@@ -54,19 +59,23 @@ export function MenuClient({
           <Link
             key={entry.category}
             href={getMenuCategoryHref(entry.category)}
-            className="relative min-h-[176px] overflow-hidden rounded-[24px] bg-[#f3f2ee] px-4 pt-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.88)]"
+            className="group relative min-h-[176px] overflow-hidden rounded-[24px] bg-[#f3f2ee] shadow-[inset_0_1px_0_rgba(255,255,255,0.88)]"
           >
-            <div className="relative z-10 max-w-[128px]">
-              <p className="text-[17px] font-medium leading-[1.14] tracking-tight text-stone-950">
+            <Image
+              src={entry.definition.imageSrc}
+              alt={entry.definition.imageAlt}
+              fill
+              sizes="(max-width: 430px) 50vw, 210px"
+              className="pointer-events-none object-cover transition duration-300 group-active:scale-[1.01]"
+              style={{ objectPosition: entry.definition.imagePosition }}
+            />
+
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.03)_0%,rgba(255,255,255,0)_100%)]" />
+
+            <div className="relative z-10 h-full p-4">
+              <p className="max-w-[136px] text-[17px] font-medium leading-[1.14] tracking-tight text-stone-950">
                 {entry.definition.label}
               </p>
-            </div>
-
-            <div className="absolute -bottom-2 -right-4 w-[134px]">
-              <ProductArtwork
-                product={entry.products[0]}
-                className="h-[126px] rounded-[22px] bg-transparent shadow-none"
-              />
             </div>
           </Link>
         ))}

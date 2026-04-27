@@ -5,6 +5,9 @@ export type MenuCategoryDefinition = {
   slug: string;
   label: string;
   preview: string;
+  imageSrc: string;
+  imageAlt: string;
+  imagePosition: string;
 };
 
 export type MenuCategoryEntry = {
@@ -19,30 +22,45 @@ export const menuCategoryDefinitions: MenuCategoryDefinition[] = [
     slug: "drinks",
     label: "Кофе",
     preview: "Кофе и напитки",
+    imageSrc: "/category-images/drinks.png",
+    imageAlt: "Капучино в белой чашке",
+    imagePosition: "center center",
   },
   {
     name: "Завтрак",
     slug: "breakfast",
     label: "Завтрак",
     preview: "Утро в кофейне",
+    imageSrc: "/category-images/breakfast.png",
+    imageAlt: "Круассан на белой тарелке",
+    imagePosition: "center center",
   },
   {
     name: "Холодные закуски",
     slug: "cold-snacks",
     label: "Закуски и салаты",
     preview: "Лёгкие закуски",
+    imageSrc: "/category-images/cold-snacks.png",
+    imageAlt: "Свежий салат в светлой тарелке",
+    imagePosition: "center center",
   },
   {
     name: "Вторые блюда",
     slug: "mains",
     label: "Горячие блюда",
     preview: "Сытные позиции",
+    imageSrc: "/category-images/mains.png",
+    imageAlt: "Горячее блюдо на белой тарелке",
+    imagePosition: "center center",
   },
   {
     name: "Десерт",
     slug: "desserts",
     label: "Десерты и йогурт",
     preview: "Сладкое и выпечка",
+    imageSrc: "/category-images/desserts.png",
+    imageAlt: "Десерт с ягодами на белой тарелке",
+    imagePosition: "center center",
   },
 ] as const;
 

@@ -1,6 +1,6 @@
 import { CartClient } from "@/components/customer/cart-client";
 import { getCurrentUser } from "@/lib/auth";
-import { getPublicQueueSummary } from "@/lib/queue";
+import { getPublicQueueSummary, getQueueHeadline } from "@/lib/queue";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +9,13 @@ export default async function CartPage() {
     getCurrentUser(),
     getPublicQueueSummary(),
   ]);
+  const queueHeadline = await getQueueHeadline(viewer?.id);
 
-  return <CartClient viewer={viewer} initialQueueSummary={initialQueueSummary} />;
+  return (
+    <CartClient
+      viewer={viewer}
+      initialQueueSummary={initialQueueSummary}
+      queueHeadline={queueHeadline}
+    />
+  );
 }

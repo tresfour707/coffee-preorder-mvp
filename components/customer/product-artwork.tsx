@@ -1,4 +1,7 @@
+import Image from "next/image";
+
 import { cn } from "@/lib/cn";
+import { getProductMedia } from "@/lib/product-media";
 import type { MenuProductSummary } from "@/lib/types";
 
 type ProductArtworkProps = {
@@ -156,12 +159,35 @@ export function ProductArtwork({
   emphasis = "card",
 }: ProductArtworkProps) {
   const isSheet = emphasis === "sheet";
+  const productMedia = getProductMedia(product.name);
+
+  if (productMedia) {
+    return (
+      <div
+        className={cn(
+          "relative overflow-hidden rounded-[24px] bg-[#f5f4f1]",
+          isSheet ? "h-[280px]" : "h-[170px] w-full",
+          className,
+        )}
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.88),transparent_34%)]" />
+        <Image
+          src={productMedia.src}
+          alt={productMedia.alt}
+          fill
+          sizes={isSheet ? "520px" : "(max-width: 430px) 50vw, 220px"}
+          className="object-cover"
+          style={{ objectPosition: productMedia.objectPosition ?? "center center" }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div
       className={cn(
         "relative overflow-hidden rounded-[24px] bg-[#f5f4f1]",
-        isSheet ? "h-[250px]" : "h-[150px] w-full",
+        isSheet ? "h-[250px]" : "h-[170px] w-full",
         className,
       )}
     >
