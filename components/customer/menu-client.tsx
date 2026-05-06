@@ -18,6 +18,15 @@ import {
 } from "@/lib/menu-catalog";
 import type { MenuProductSummary, PublicQueueSummary, ViewerSummary } from "@/lib/types";
 
+function SearchIcon() {
+  return (
+    <span className="relative block h-5 w-5 text-stone-400">
+      <span className="absolute inset-0 rounded-full border-[2.5px] border-current" />
+      <span className="absolute bottom-[-2px] right-[-2px] h-2.5 w-[2.5px] rotate-[-45deg] rounded-full bg-current" />
+    </span>
+  );
+}
+
 type MenuClientProps = {
   products: MenuProductSummary[];
   viewer: ViewerSummary | null;
@@ -54,6 +63,17 @@ export function MenuClient({
       contentClassName="mt-0"
       className="pb-28 pt-0"
     >
+      <section className="mb-5">
+        <Link
+          href="/menu/search"
+          className="flex min-h-[62px] items-center gap-4 rounded-[22px] border border-white/70 bg-[rgba(255,255,255,0.72)] px-5 text-[19px] font-medium tracking-tight text-stone-500 shadow-[0_16px_34px_rgba(31,23,18,0.08)] backdrop-blur-[22px] transition active:scale-[0.99]"
+          aria-label="Открыть быстрый поиск"
+        >
+          <SearchIcon />
+          <span>Быстрый поиск</span>
+        </Link>
+      </section>
+
       <section id="categories" className="grid grid-cols-2 gap-3">
         {categoryEntries.map((entry) => (
           <Link

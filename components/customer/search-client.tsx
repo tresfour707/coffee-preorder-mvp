@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { BackLink } from "@/components/customer/back-link";
 import { CustomerMobileShell } from "@/components/customer/customer-mobile-shell";
@@ -13,45 +14,53 @@ import {
   selectCartByOwner,
   useCustomerCartStore,
 } from "@/lib/cart-store";
-import type { MenuCategoryDefinition } from "@/lib/menu-catalog";
-import {
-  getCategoryFilterChips,
-  matchesCategoryFilter,
-} from "@/lib/menu-catalog";
 import type {
   MenuProductSummary,
   ProductSummary,
   ViewerSummary,
 } from "@/lib/types";
 
-type CategoryMenuClientProps = {
-  category: MenuCategoryDefinition;
+type SearchClientProps = {
   products: MenuProductSummary[];
   viewer: ViewerSummary | null;
 };
 
 function SearchIcon() {
   return (
-    <span className="relative block h-4 w-4 text-stone-400">
+    <span className="relative block h-[18px] w-[18px] text-stone-400">
       <span className="absolute inset-0 rounded-full border-2 border-current" />
       <span className="absolute bottom-[-1px] right-[-1px] h-2 w-[2px] rotate-[-45deg] rounded-full bg-current" />
     </span>
   );
 }
 
-export function CategoryMenuClient({
-  category,
+function getSearchText(product: MenuProductSummary) {
+  return [
+    product.name,
+    product.category ?? "",
+    product.description ?? "",
+    product.variants.map((variant) => variant.sizeLabel ?? "").join(" "),
+  ]
+    .join(" ")
+    .toLowerCase();
+}
+
+export function SearchClient({
   products,
   viewer,
-}: CategoryMenuClientProps) {
+}: SearchClientProps) {
   const ownerKey = getCartOwnerKey(viewer?.id);
   const addProduct = useCustomerCartStore((state) => state.addProduct);
   const items = useCustomerCartStore(selectCartByOwner(ownerKey));
   const hasHydrated = useCustomerCartStore((state) => state.hasHydrated);
   const [isMounted, setIsMounted] = useState(false);
   const [query, setQuery] = useState("");
-  const [activeChip, setActiveChip] = useState("Все");
   const [activeProduct, setActiveProduct] = useState<MenuProductSummary | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   useEffect(() => {
     if (hasHydrated) {
@@ -59,33 +68,22 @@ export function CategoryMenuClient({
     }
   }, [hasHydrated]);
 
-  const chips = useMemo(
-    () => getCategoryFilterChips(category.name, products),
-    [category.name, products],
+  const normalizedQuery = query.trim().toLowerCase();
+  const queryTokens = useMemo(
+    () => normalizedQuery.split(/\s+/).filter(Boolean),
+    [normalizedQuery],
   );
-
-  useEffect(() => {
-    if (!chips.includes(activeChip)) {
-      setActiveChip("Все");
-    }
-  }, [activeChip, chips]);
-
   const filteredProducts = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase();
+    if (queryTokens.length === 0) {
+      return products;
+    }
 
     return products.filter((product) => {
-      if (!matchesCategoryFilter(product, category.name, activeChip)) {
-        return false;
-      }
+      const searchText = getSearchText(product);
 
-      if (!normalizedQuery) {
-        return true;
-      }
-
-      return product.name.toLowerCase().includes(normalizedQuery);
+      return queryTokens.every((token) => searchText.includes(token));
     });
-  }, [activeChip, category.name, products, query]);
-
+  }, [products, queryTokens]);
   const cartSummary = getCartSummary(items);
 
   function handleAddProduct(variant: ProductSummary, quantity: number) {
@@ -95,64 +93,58 @@ export function CategoryMenuClient({
   }
 
   return (
-    <CustomerMobileShell viewer={viewer} className="pb-28 pt-0">
-      <section className="space-y-4">
-        <div className="flex items-center gap-2">
+    <CustomerMobileShell viewer={viewer} className="pb-28 pt-0" contentClassName="mt-0">
+      <section className="space-y-5">
+        <div className="sticky top-[82px] z-20 -mx-1 flex items-center gap-2 bg-[#fffaf6]/78 px-1 py-2 backdrop-blur-[22px]">
           <BackLink />
 
-          <div className="min-h-12 flex-1 rounded-[18px] bg-[#f3f2ee] px-4 py-3.5">
-            <div className="flex items-center gap-3">
-              <SearchIcon />
-              <input
-                type="text"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Что вы хотите найти?"
-                className="w-full bg-transparent text-sm text-stone-900 outline-none placeholder:text-stone-400"
-              />
-            </div>
+          <div className="flex min-h-12 flex-1 items-center gap-3 rounded-[17px] bg-[rgba(255,255,255,0.76)] px-4 shadow-[0_12px_26px_rgba(31,23,18,0.08)]">
+            <SearchIcon />
+            <input
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Быстрый поиск"
+              className="min-w-0 flex-1 bg-transparent text-[17px] font-medium text-stone-950 outline-none placeholder:text-stone-400"
+            />
+            {query ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setQuery("");
+                  inputRef.current?.focus();
+                }}
+                aria-label="Очистить поиск"
+                className="flex h-7 w-7 items-center justify-center rounded-full bg-stone-200/80 text-[18px] leading-none text-stone-600"
+              >
+                ×
+              </button>
+            ) : null}
           </div>
         </div>
 
-        <div className="flex items-center gap-2 overflow-x-auto pb-1">
-          {chips.map((chip) => {
-            const isActive = chip === activeChip;
-
-            return (
-              <button
-                key={chip}
-                type="button"
-                onClick={() => setActiveChip(chip)}
-                className={`shrink-0 rounded-[14px] px-4 py-2.5 text-sm font-medium transition ${
-                  isActive
-                    ? "bg-[#eceae5] text-stone-950"
-                    : "bg-transparent text-stone-700"
-                }`}
-              >
-                {chip}
-              </button>
-            );
-          })}
-        </div>
-
         <div>
-          <h1 className="text-[32px] font-medium leading-none tracking-tight text-stone-950">
-            {category.label}
+          <h1 className="text-[30px] font-medium leading-none tracking-tight text-stone-950">
+            {queryTokens.length > 0
+              ? `Нашли ${filteredProducts.length} позиций`
+              : "Все позиции"}
           </h1>
         </div>
 
         {filteredProducts.length === 0 ? (
           <EmptyState
             title="Ничего не найдено"
-            description="Попробуйте убрать фильтр или изменить поисковый запрос."
+            description="Попробуйте другое название."
           />
         ) : (
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid auto-rows-fr grid-cols-2 gap-3">
             {filteredProducts.map((product) => (
               <ProductGridCard
                 key={product.id}
                 product={product}
                 onOpen={setActiveProduct}
+                stableLayout
               />
             ))}
           </div>
