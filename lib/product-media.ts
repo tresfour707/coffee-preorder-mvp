@@ -5,6 +5,166 @@ export type ProductMediaDefinition = {
 };
 
 const productMediaByName: Record<string, ProductMediaDefinition> = {
+  "Капучино": {
+    src: "/product-images/drinks/cappuccino.png",
+    alt: "Капучино",
+  },
+  "Латте": {
+    src: "/product-images/drinks/latte.png",
+    alt: "Латте",
+  },
+  "Раф-кофе": {
+    src: "/product-images/drinks/raf-coffee.png",
+    alt: "Раф-кофе",
+  },
+  "Флэт Уайт": {
+    src: "/product-images/drinks/flat-white.png",
+    alt: "Флэт Уайт",
+  },
+  "Американо": {
+    src: "/product-images/drinks/americano.png",
+    alt: "Американо",
+  },
+  "Фильтр-кофе": {
+    src: "/product-images/drinks/filter-coffee.png",
+    alt: "Фильтр-кофе",
+  },
+  "Эспрессо": {
+    src: "/product-images/drinks/espresso.png",
+    alt: "Эспрессо",
+  },
+  "Какао": {
+    src: "/product-images/drinks/cacao.png",
+    alt: "Какао",
+  },
+  "Маття-латте": {
+    src: "/product-images/drinks/matcha-latte.png",
+    alt: "Маття-латте",
+  },
+  "Лимонад апельсин-фейхоа": {
+    src: "/product-images/drinks/orange-feijoa-lemonade.png",
+    alt: "Лимонад апельсин-фейхоа",
+  },
+  "Тоник вишня-базилик": {
+    src: "/product-images/drinks/cherry-basil-tonic.png",
+    alt: "Тоник вишня-базилик",
+  },
+  "Пряный улун с грейпфрутом": {
+    src: "/product-images/drinks/oolong-grapefruit.png",
+    alt: "Пряный улун с грейпфрутом",
+  },
+  "Матча карамельный попкорн": {
+    src: "/product-images/drinks/matcha-caramel-popcorn.png",
+    alt: "Матча карамельный попкорн",
+  },
+  "Капучино ром и ирландский крем": {
+    src: "/product-images/drinks/cappuccino-rum-irish-cream.png",
+    alt: "Капучино ром и ирландский крем",
+  },
+  "Мокко пряный маршмеллоу": {
+    src: "/product-images/drinks/spicy-mocha-marshmallow.png",
+    alt: "Мокко пряный маршмеллоу",
+  },
+  "Арахисовый Раф": {
+    src: "/product-images/drinks/peanut-raf.png",
+    alt: "Арахисовый Раф",
+  },
+  "Гранатовый Глинтвейн": {
+    src: "/product-images/drinks/pomegranate-glintwein.png",
+    alt: "Гранатовый Глинтвейн",
+  },
+  "Тыквенный Латте": {
+    src: "/product-images/drinks/pumpkin-latte.png",
+    alt: "Тыквенный Латте",
+  },
+  "Холодный какао re-feel": {
+    src: "/product-images/drinks/cold-cacao-refeel.png",
+    alt: "Холодный какао re-feel",
+  },
+  "Матча-латте re-feel": {
+    src: "/product-images/drinks/matcha-refeel.png",
+    alt: "Матча-латте re-feel",
+  },
+  "Грейпфрут-бузина": {
+    src: "/product-images/drinks/grapefruit-elder.png",
+    alt: "Грейпфрут-бузина",
+  },
+  "Грушевый чай": {
+    src: "/product-images/drinks/pear-tea.png",
+    alt: "Грушевый чай",
+  },
+  "Смородина-мята": {
+    src: "/product-images/drinks/blackcurrant-mint.png",
+    alt: "Смородина-мята",
+  },
+  "Облепиха-имбирь": {
+    src: "/product-images/drinks/sea-buckthorn-ginger.png",
+    alt: "Облепиха-имбирь",
+  },
+  "Клюква-можжевельник": {
+    src: "/product-images/drinks/cranberry-juniper.png",
+    alt: "Клюква-можжевельник",
+  },
+  "Ягодный микс": {
+    src: "/product-images/drinks/berry-mix.png",
+    alt: "Ягодный микс",
+  },
+  "Чай Ассам": {
+    src: "/product-images/drinks/tea-assam.png",
+    alt: "Чай Ассам",
+  },
+  "Чай Шу Пуэр": {
+    src: "/product-images/drinks/tea-shu-puer.png",
+    alt: "Чай Шу Пуэр",
+  },
+  "Чай Эрл Грей": {
+    src: "/product-images/drinks/tea-earl-grey.png",
+    alt: "Чай Эрл Грей",
+  },
+  "Чай травяной": {
+    src: "/product-images/drinks/tea-herbal.png",
+    alt: "Чай травяной",
+  },
+  "Чай Моли Хуа Ча": {
+    src: "/product-images/drinks/tea-moli-hua-cha.png",
+    alt: "Чай Моли Хуа Ча",
+  },
+  "Чай Те Гуанинь": {
+    src: "/product-images/drinks/tea-te-guanin.png",
+    alt: "Чай Те Гуанинь",
+  },
+  "Стакан средний": {
+    src: "/product-images/drinks/medium-cup.png",
+    alt: "Стакан средний",
+  },
+  "Айс Латте": {
+    src: "/product-images/drinks/iced-latte.png",
+    alt: "Айс Латте",
+  },
+  "Апельсиновый Бамбл": {
+    src: "/product-images/drinks/orange-bumble.png",
+    alt: "Апельсиновый Бамбл",
+  },
+  "Маття-тоник": {
+    src: "/product-images/drinks/matcha-tonic.png",
+    alt: "Маття-тоник",
+  },
+  "Эспрессо-тоник": {
+    src: "/product-images/drinks/espresso-tonic.png",
+    alt: "Эспрессо-тоник",
+  },
+  "Айс Какао": {
+    src: "/product-images/drinks/iced-cacao.png",
+    alt: "Айс Какао",
+  },
+  "Холодный раф": {
+    src: "/product-images/drinks/cold-raf.png",
+    alt: "Холодный раф",
+  },
+  "Самери Шу": {
+    src: "/product-images/drinks/sameri-shu.png",
+    alt: "Самери Шу",
+  },
   "Шашлычок куриный с картофелем": {
     src: "/product-images/mains/chicken-skewer-potatoes-v2.png",
     alt: "Шашлычок куриный с картофелем на белой тарелке",
