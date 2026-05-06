@@ -105,6 +105,110 @@ const productMediaByName: Record<string, ProductMediaDefinition> = {
     src: "/product-images/breakfast/angliyskiy-zavtrak-s-kolbaskoy.png",
     alt: "Английский завтрак с колбаской в белой тарелке",
   },
+  "Ватрушка с творогом": {
+    src: "/product-images/desserts/cottage-cheese-vatrushka.png",
+    alt: "Ватрушка с творогом",
+  },
+  "Дениш с малиной": {
+    src: "/product-images/desserts/raspberry-danish.png",
+    alt: "Дениш с малиной",
+  },
+  "Ириска с гималайской солью": {
+    src: "/product-images/desserts/himalayan-salt-toffee.png",
+    alt: "Ириска с гималайской солью",
+  },
+  "Ириска сливочная": {
+    src: "/product-images/desserts/creamy-toffee.png",
+    alt: "Ириска сливочная",
+  },
+  "Кекс лимонный": {
+    src: "/product-images/desserts/lemon-cake.png",
+    alt: "Кекс лимонный",
+  },
+  "Кекс шоколадный": {
+    src: "/product-images/desserts/chocolate-cake.png",
+    alt: "Кекс шоколадный",
+  },
+  "Классический круассан": {
+    src: "/product-images/desserts/classic-croissant.png",
+    alt: "Классический круассан",
+  },
+  "Круассан с лавандой и черникой": {
+    src: "/product-images/desserts/lavender-blueberry-croissant.png",
+    alt: "Круассан с лавандой и черникой",
+  },
+  "Кукис овсяный с изюмом": {
+    src: "/product-images/desserts/oatmeal-raisin-cookie.png",
+    alt: "Кукис овсяный с изюмом",
+  },
+  "Кукис с молочным шоколадом": {
+    src: "/product-images/desserts/milk-chocolate-cookie.png",
+    alt: "Кукис с молочным шоколадом",
+  },
+  "Кукис шоколадный с апельсином": {
+    src: "/product-images/desserts/chocolate-orange-cookie.png",
+    alt: "Кукис шоколадный с апельсином",
+  },
+  "Миндальный круассан": {
+    src: "/product-images/desserts/almond-croissant.png",
+    alt: "Миндальный круассан",
+  },
+  "Плетенка с маком": {
+    src: "/product-images/desserts/poppy-seed-braid.png",
+    alt: "Плетенка с маком",
+  },
+  'Пирожное "Медовик"': {
+    src: "/product-images/desserts/honey-cake.png",
+    alt: 'Пирожное "Медовик"',
+  },
+  "Пирожное Наполеон": {
+    src: "/product-images/desserts/napoleon-cake.png",
+    alt: "Пирожное Наполеон",
+  },
+  "Пирожное Шу": {
+    src: "/product-images/desserts/choux-pastry.png",
+    alt: "Пирожное Шу",
+  },
+  "Синнабон": {
+    src: "/product-images/desserts/cinnabon.png",
+    alt: "Синнабон",
+  },
+  "Сочник с творогом": {
+    src: "/product-images/desserts/cottage-cheese-sochnik.png",
+    alt: "Сочник с творогом",
+  },
+  "Тирамису": {
+    src: "/product-images/desserts/tiramisu.png",
+    alt: "Тирамису",
+  },
+  "Трубочка со сгущёнкой": {
+    src: "/product-images/desserts/condensed-milk-tube.png",
+    alt: "Трубочка со сгущёнкой",
+  },
+  "Улитка с маком": {
+    src: "/product-images/desserts/poppy-seed-snail.png",
+    alt: "Улитка с маком",
+  },
+  "Улитка с изюмом": {
+    src: "/product-images/desserts/raisin-snail.png",
+    alt: "Улитка с изюмом",
+  },
+  "Улитка с корицей и карамелью": {
+    src: "/product-images/desserts/cinnamon-caramel-snail.png",
+    alt: "Улитка с корицей и карамелью",
+  },
+  'Чиа-пудинг "Кокос-малина"': {
+    src: "/product-images/desserts/coconut-raspberry-chia-pudding.png",
+    alt: 'Чиа-пудинг "Кокос-малина"',
+  },
+  'Чиа-пудинг "Манго-кокос"': {
+    src: "/product-images/desserts/mango-coconut-chia-pudding.png",
+    alt: 'Чиа-пудинг "Манго-кокос"',
+  },
+  "Шоколадный круассан": {
+    src: "/product-images/desserts/chocolate-croissant.png",
+    alt: "Шоколадный круассан",
+  },
 };
 
 export function getProductMedia(name: string) {
