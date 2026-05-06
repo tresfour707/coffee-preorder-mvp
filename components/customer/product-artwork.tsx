@@ -165,12 +165,11 @@ export function ProductArtwork({
     return (
       <div
         className={cn(
-          "relative overflow-hidden rounded-[24px] bg-[#f5f4f1]",
+          "relative overflow-hidden rounded-[24px] bg-[#f5f2ed]",
           isSheet ? "h-[280px]" : "h-[170px] w-full",
           className,
         )}
       >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.88),transparent_34%)]" />
         <Image
           src={productMedia.src}
           alt={productMedia.alt}
