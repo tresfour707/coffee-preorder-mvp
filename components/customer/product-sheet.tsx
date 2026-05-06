@@ -95,11 +95,6 @@ export function ProductSheet({
                     : formatMoney(product.priceFrom)}
                 </p>
               </div>
-              <p className="max-w-[132px] text-right text-xs leading-5 text-stone-500">
-                {product.kind === "DRINK"
-                  ? "Выберите объём и добавьте в корзину"
-                  : "Можно добавить сразу"}
-              </p>
             </div>
 
             {availableVariants.length > 1 ||
@@ -132,7 +127,6 @@ export function ProductSheet({
             <div className="mt-5 flex items-center justify-between gap-4">
               <div>
                 <p className="kicker text-stone-400">Количество</p>
-                <p className="mt-2 text-sm text-stone-500">Изменить можно и позже</p>
               </div>
 
               <QuantityControl
@@ -167,7 +161,7 @@ export function ProductSheet({
                   onAdd(selectedVariant, quantity);
                   onClose();
                 }}
-                className="rounded-full bg-[#ff5a4f] px-5 py-3.5 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:bg-stone-300"
+                className="rounded-full bg-[#3f2a1d] px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-[#302016] disabled:cursor-not-allowed disabled:bg-stone-300"
               >
                 Добавить
               </button>

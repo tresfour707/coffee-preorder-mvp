@@ -31,19 +31,6 @@ type CategoryMenuClientProps = {
   viewer: ViewerSummary | null;
 };
 
-function FilterIcon() {
-  return (
-    <span className="relative block h-4 w-4">
-      <span className="absolute left-0 top-0 h-[2px] w-4 rounded-full bg-stone-700" />
-      <span className="absolute left-0 top-[6px] h-[2px] w-4 rounded-full bg-stone-700" />
-      <span className="absolute left-0 top-[12px] h-[2px] w-4 rounded-full bg-stone-700" />
-      <span className="absolute left-[2px] top-[-1px] h-1.5 w-1.5 rounded-full bg-stone-700" />
-      <span className="absolute left-[10px] top-[5px] h-1.5 w-1.5 rounded-full bg-stone-700" />
-      <span className="absolute left-[5px] top-[11px] h-1.5 w-1.5 rounded-full bg-stone-700" />
-    </span>
-  );
-}
-
 function SearchIcon() {
   return (
     <span className="relative block h-4 w-4 text-stone-400">
@@ -141,18 +128,6 @@ export function CategoryMenuClient({
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto pb-1">
-          <button
-            type="button"
-            onClick={() => {
-              setQuery("");
-              setActiveChip("Все");
-            }}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] bg-[#f3f2ee]"
-            aria-label="Сбросить фильтры"
-          >
-            <FilterIcon />
-          </button>
-
           {chips.map((chip) => {
             const isActive = chip === activeChip;
 
@@ -217,7 +192,7 @@ export function CategoryMenuClient({
                     type="button"
                     disabled={!product.available}
                     onClick={() => setActiveProduct(product)}
-                    className="ml-auto flex h-10 w-[74px] items-center justify-center rounded-full bg-[#ff5a4f] text-[28px] font-light leading-none text-white transition disabled:cursor-not-allowed disabled:bg-stone-300"
+                    className="ml-auto flex h-10 w-[74px] items-center justify-center rounded-full bg-[#3f2a1d] text-[28px] font-light leading-none text-white transition hover:bg-[#302016] disabled:cursor-not-allowed disabled:bg-stone-300"
                   >
                     +
                   </button>
