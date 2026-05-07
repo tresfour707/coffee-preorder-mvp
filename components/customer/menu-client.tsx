@@ -6,6 +6,8 @@ import { useEffect, useMemo, useState } from "react";
 
 import { FloatingCartLink } from "@/components/customer/floating-cart-link";
 import { CustomerMobileShell } from "@/components/customer/customer-mobile-shell";
+import { ProductGridCard } from "@/components/customer/product-grid-card";
+import { ProductSheet } from "@/components/customer/product-sheet";
 import { getCartSummary } from "@/lib/cart";
 import {
   getCartOwnerKey,
@@ -16,7 +18,12 @@ import {
   buildMenuCategoryEntries,
   getMenuCategoryHref,
 } from "@/lib/menu-catalog";
-import type { MenuProductSummary, PublicQueueSummary, ViewerSummary } from "@/lib/types";
+import type {
+  MenuProductSummary,
+  ProductSummary,
+  PublicQueueSummary,
+  ViewerSummary,
+} from "@/lib/types";
 
 function SearchIcon() {
   return (
@@ -29,6 +36,7 @@ function SearchIcon() {
 
 type MenuClientProps = {
   products: MenuProductSummary[];
+  purchasedProducts: MenuProductSummary[];
   viewer: ViewerSummary | null;
   initialQueueSummary: PublicQueueSummary;
   queueHeadline: string;
@@ -36,14 +44,17 @@ type MenuClientProps = {
 
 export function MenuClient({
   products,
+  purchasedProducts,
   viewer,
   initialQueueSummary,
   queueHeadline,
 }: MenuClientProps) {
   const ownerKey = getCartOwnerKey(viewer?.id);
+  const addProduct = useCustomerCartStore((state) => state.addProduct);
   const items = useCustomerCartStore(selectCartByOwner(ownerKey));
   const hasHydrated = useCustomerCartStore((state) => state.hasHydrated);
   const [isMounted, setIsMounted] = useState(false);
+  const [activeProduct, setActiveProduct] = useState<MenuProductSummary | null>(null);
   const categoryEntries = useMemo(() => buildMenuCategoryEntries(products), [products]);
 
   useEffect(() => {
@@ -54,6 +65,12 @@ export function MenuClient({
 
   const cartSummary = getCartSummary(items);
 
+  function handleAddProduct(variant: ProductSummary, quantity: number) {
+    for (let index = 0; index < quantity; index += 1) {
+      addProduct(ownerKey, variant);
+    }
+  }
+
   return (
     <CustomerMobileShell
       viewer={viewer}
@@ -63,7 +80,40 @@ export function MenuClient({
       contentClassName="mt-0"
       className="pb-28 pt-0"
     >
-      <section className="mb-5">
+      {purchasedProducts.length > 0 ? (
+        <section className="mb-14">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <h2 className="text-[28px] font-medium leading-none tracking-tight text-stone-950">
+              Вы покупали
+            </h2>
+
+            <Link
+              href="/menu/purchased"
+              className="inline-flex h-10 items-center gap-1.5 rounded-full bg-[rgba(255,255,255,0.72)] px-4 text-sm font-semibold text-stone-800 shadow-[0_12px_26px_rgba(31,23,18,0.08)] backdrop-blur-[22px] transition active:scale-[0.97]"
+            >
+              Все
+              <span className="text-[22px] font-light leading-none">›</span>
+            </Link>
+          </div>
+
+          <div className="-mx-4 overflow-x-auto px-4 pb-1">
+            <div className="flex items-stretch gap-3">
+              {purchasedProducts.map((product) => (
+                <ProductGridCard
+                  key={product.id}
+                  product={product}
+                  onOpen={setActiveProduct}
+                  stableLayout
+                  compact
+                  className="w-[146px] shrink-0"
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      <section id="quick-search" className="mb-5 scroll-mt-[112px]">
         <Link
           href="/menu/search"
           className="flex min-h-[62px] items-center gap-4 rounded-[22px] border border-white/70 bg-[rgba(255,255,255,0.72)] px-5 text-[19px] font-medium tracking-tight text-stone-500 shadow-[0_16px_34px_rgba(31,23,18,0.08)] backdrop-blur-[22px] transition active:scale-[0.99]"
@@ -105,6 +155,14 @@ export function MenuClient({
         <FloatingCartLink
           itemsCount={cartSummary.itemsCount}
           totalPrice={cartSummary.totalPrice}
+        />
+      ) : null}
+
+      {activeProduct ? (
+        <ProductSheet
+          product={activeProduct}
+          onClose={() => setActiveProduct(null)}
+          onAdd={handleAddProduct}
         />
       ) : null}
     </CustomerMobileShell>

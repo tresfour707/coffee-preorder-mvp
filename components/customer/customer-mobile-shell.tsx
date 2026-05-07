@@ -212,7 +212,7 @@ export function CustomerMobileShell({
           <div className="relative z-10 flex flex-1 flex-col justify-center pb-6 pt-12">
             <nav className="space-y-5 text-center">
               <Link
-                href="/menu#categories"
+                href="/menu#quick-search"
                 onClick={() => setActivePanel(null)}
                 className="block text-[28px] font-normal tracking-tight text-stone-950"
               >

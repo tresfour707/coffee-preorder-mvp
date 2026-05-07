@@ -66,6 +66,18 @@ a {
   background: rgba(127, 168, 238, 0.24);
 }
 
+@keyframes cartBarRefresh {
+  from {
+    opacity: 0.82;
+    transform: translateY(4px) scale(0.992);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 input,
 button,
 textarea,

@@ -21,6 +21,7 @@ import {
 import type {
   DemoPaymentDetails,
   DemoPaymentResolution,
+  MenuProductSummary,
   OrderDetails,
   OrderRequestItem,
   PaymentMethod as PublicPaymentMethod,
@@ -262,6 +263,94 @@ export async function listOrdersForUser(viewerUserId: string): Promise<UserOrder
       ordersAhead: details.ordersAhead,
     };
   });
+}
+
+export async function listRecentlyPurchasedProductKeysForUser(
+  viewerUserId: string,
+): Promise<string[]> {
+  const orders = await prisma.order.findMany({
+    where: {
+      userId: viewerUserId,
+      source: OrderSource.ONLINE,
+      status: {
+        not: OrderStatus.CANCELLED,
+      },
+      publicOrderNumber: {
+        not: null,
+      },
+      confirmedAt: {
+        not: null,
+      },
+    },
+    orderBy: [
+      {
+        confirmedAt: "desc",
+      },
+      {
+        createdAt: "desc",
+      },
+    ],
+    include: {
+      items: {
+        orderBy: {
+          id: "asc",
+        },
+        include: {
+          product: {
+            select: {
+              id: true,
+              groupKey: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const orderedKeys: string[] = [];
+  const seenKeys = new Set<string>();
+
+  for (const order of orders) {
+    for (const item of order.items) {
+      const key = item.product?.groupKey ?? item.product?.id;
+
+      if (!key || seenKeys.has(key)) {
+        continue;
+      }
+
+      seenKeys.add(key);
+      orderedKeys.push(key);
+    }
+  }
+
+  return orderedKeys;
+}
+
+export function sortProductsByPurchasedKeys(
+  products: MenuProductSummary[],
+  purchasedKeys: string[],
+) {
+  const productById = new Map(products.map((product) => [product.id, product]));
+  const purchasedProducts: MenuProductSummary[] = [];
+  const purchasedIds = new Set<string>();
+
+  for (const key of purchasedKeys) {
+    const product = productById.get(key);
+
+    if (!product || purchasedIds.has(product.id)) {
+      continue;
+    }
+
+    purchasedIds.add(product.id);
+    purchasedProducts.push(product);
+  }
+
+  const otherProducts = products.filter((product) => !purchasedIds.has(product.id));
+
+  return {
+    purchasedProducts,
+    otherProducts,
+  };
 }
 
 export async function createOfflineOrder(

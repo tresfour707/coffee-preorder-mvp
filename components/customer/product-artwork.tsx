@@ -8,6 +8,7 @@ type ProductArtworkProps = {
   product: Pick<MenuProductSummary, "name" | "category" | "kind">;
   className?: string;
   emphasis?: "card" | "sheet";
+  size?: "regular" | "compact";
 };
 
 function getDrinkPalette(name: string) {
@@ -45,9 +46,11 @@ function getDrinkPalette(name: string) {
 function CupArt({
   name,
   isSheet,
+  isCompact,
 }: {
   name: string;
   isSheet: boolean;
+  isCompact: boolean;
 }) {
   const palette = getDrinkPalette(name);
 
@@ -56,34 +59,46 @@ function CupArt({
       <div
         className={cn(
           "absolute left-1/2 top-1/2 -translate-x-1/2 rounded-full bg-black/8 blur-md",
-          isSheet ? "h-6 w-40 translate-y-[86px]" : "h-4 w-24 translate-y-[58px]",
+          isSheet
+            ? "h-6 w-40 translate-y-[86px]"
+            : isCompact
+              ? "h-3 w-20 translate-y-[48px]"
+              : "h-4 w-24 translate-y-[58px]",
         )}
       />
       <div
         className={cn(
           "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_10px_25px_rgba(17,24,39,0.08)]",
-          isSheet ? "h-44 w-44" : "h-28 w-28",
+          isSheet ? "h-44 w-44" : isCompact ? "h-24 w-24" : "h-28 w-28",
         )}
       >
         <div
           className={cn(
             "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full",
             palette.liquid,
-            isSheet ? "h-32 w-32" : "h-20 w-20",
+            isSheet ? "h-32 w-32" : isCompact ? "h-[70px] w-[70px]" : "h-20 w-20",
           )}
         />
         <div
           className={cn(
             "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-85",
             palette.foam,
-            isSheet ? "h-[106px] w-[106px]" : "h-[68px] w-[68px]",
+            isSheet
+              ? "h-[106px] w-[106px]"
+              : isCompact
+                ? "h-[58px] w-[58px]"
+                : "h-[68px] w-[68px]",
           )}
         />
         <div
           className={cn(
             "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-90",
             palette.swirl,
-            isSheet ? "h-[84px] w-[84px]" : "h-[52px] w-[52px]",
+            isSheet
+              ? "h-[84px] w-[84px]"
+              : isCompact
+                ? "h-[44px] w-[44px]"
+                : "h-[52px] w-[52px]",
           )}
         />
       </div>
@@ -94,9 +109,11 @@ function CupArt({
 function PlateArt({
   category,
   isSheet,
+  isCompact,
 }: {
   category: string | null;
   isSheet: boolean;
+  isCompact: boolean;
 }) {
   const accent =
     category === "Десерт"
@@ -119,33 +136,49 @@ function PlateArt({
       <div
         className={cn(
           "absolute left-1/2 top-1/2 -translate-x-1/2 rounded-full bg-black/8 blur-md",
-          isSheet ? "h-6 w-44 translate-y-[84px]" : "h-4 w-28 translate-y-[60px]",
+          isSheet
+            ? "h-6 w-44 translate-y-[84px]"
+            : isCompact
+              ? "h-3 w-24 translate-y-[50px]"
+              : "h-4 w-28 translate-y-[60px]",
         )}
       />
       <div
         className={cn(
           "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_10px_25px_rgba(17,24,39,0.08)]",
-          isSheet ? "h-40 w-40" : "h-[104px] w-[104px]",
+          isSheet ? "h-40 w-40" : isCompact ? "h-[90px] w-[90px]" : "h-[104px] w-[104px]",
         )}
       >
         <div
           className={cn(
             "absolute rounded-full",
             accent,
-            isSheet ? "right-[30px] top-[46px] h-14 w-20 rotate-12" : "right-[18px] top-[30px] h-10 w-14 rotate-12",
+            isSheet
+              ? "right-[30px] top-[46px] h-14 w-20 rotate-12"
+              : isCompact
+                ? "right-[16px] top-[26px] h-8 w-12 rotate-12"
+                : "right-[18px] top-[30px] h-10 w-14 rotate-12",
           )}
         />
         <div
           className={cn(
             "absolute rounded-full",
             side,
-            isSheet ? "left-[26px] top-[58px] h-12 w-14 rotate-[-18deg]" : "left-[16px] top-[38px] h-8 w-10 rotate-[-18deg]",
+            isSheet
+              ? "left-[26px] top-[58px] h-12 w-14 rotate-[-18deg]"
+              : isCompact
+                ? "left-[14px] top-[34px] h-7 w-9 rotate-[-18deg]"
+                : "left-[16px] top-[38px] h-8 w-10 rotate-[-18deg]",
           )}
         />
         <div
           className={cn(
             "absolute rounded-full bg-[#58a04a]",
-            isSheet ? "left-[60px] top-[30px] h-7 w-7" : "left-[38px] top-[18px] h-5 w-5",
+            isSheet
+              ? "left-[60px] top-[30px] h-7 w-7"
+              : isCompact
+                ? "left-[33px] top-[16px] h-4 w-4"
+                : "left-[38px] top-[18px] h-5 w-5",
           )}
         />
       </div>
@@ -157,8 +190,10 @@ export function ProductArtwork({
   product,
   className,
   emphasis = "card",
+  size = "regular",
 }: ProductArtworkProps) {
   const isSheet = emphasis === "sheet";
+  const isCompact = !isSheet && size === "compact";
   const productMedia = getProductMedia(product.name);
 
   if (productMedia) {
@@ -166,7 +201,7 @@ export function ProductArtwork({
       <div
         className={cn(
           "relative overflow-hidden rounded-[24px] bg-[#f5f2ed]",
-          isSheet ? "h-[280px]" : "h-[170px] w-full",
+          isSheet ? "h-[280px]" : isCompact ? "h-[132px] w-full" : "h-[170px] w-full",
           className,
         )}
       >
@@ -185,8 +220,8 @@ export function ProductArtwork({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-[24px] bg-[#f5f4f1]",
-        isSheet ? "h-[250px]" : "h-[170px] w-full",
+          "relative overflow-hidden rounded-[24px] bg-[#f5f4f1]",
+        isSheet ? "h-[250px]" : isCompact ? "h-[132px] w-full" : "h-[170px] w-full",
         className,
       )}
     >
@@ -194,9 +229,13 @@ export function ProductArtwork({
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.58)_0%,rgba(245,244,241,0.92)_100%)]" />
 
       {product.kind === "DRINK" ? (
-        <CupArt name={product.name} isSheet={isSheet} />
+        <CupArt name={product.name} isSheet={isSheet} isCompact={isCompact} />
       ) : (
-        <PlateArt category={product.category} isSheet={isSheet} />
+        <PlateArt
+          category={product.category}
+          isSheet={isSheet}
+          isCompact={isCompact}
+        />
       )}
     </div>
   );
