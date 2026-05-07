@@ -161,7 +161,7 @@ export function ProductSheet({
                   onAdd(selectedVariant, quantity);
                   onClose();
                 }}
-                className="rounded-full bg-[#3f2a1d] px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-[#302016] disabled:cursor-not-allowed disabled:bg-stone-300"
+                className="rounded-full bg-[#6b4a38] px-5 py-3.5 text-sm font-semibold text-white shadow-[0_12px_26px_rgba(91,64,45,0.22)] transition hover:bg-[#5f4131] disabled:cursor-not-allowed disabled:bg-stone-300 disabled:text-stone-500 disabled:shadow-none"
               >
                 Добавить
               </button>

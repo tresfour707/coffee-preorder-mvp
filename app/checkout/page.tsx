@@ -2,40 +2,15 @@ import { redirect } from "next/navigation";
 
 import { CheckoutClient } from "@/components/customer/checkout-client";
 import { getCurrentUser } from "@/lib/auth";
-import { getPublicQueueSummary, getQueueHeadline } from "@/lib/queue";
 
 export const dynamic = "force-dynamic";
 
-export default async function CheckoutPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ payment?: string }>;
-}) {
+export default async function CheckoutPage() {
   const viewer = await getCurrentUser();
 
   if (!viewer) {
     redirect("/sign-in?next=/checkout");
   }
 
-  const params = await searchParams;
-  const paymentNotice =
-    params.payment === "failed"
-      ? "FAILED"
-      : params.payment === "cancelled"
-        ? "CANCELLED"
-        : null;
-
-  const [initialQueueSummary, queueHeadline] = await Promise.all([
-    getPublicQueueSummary(),
-    getQueueHeadline(viewer.id),
-  ]);
-
-  return (
-    <CheckoutClient
-      viewer={viewer}
-      paymentNotice={paymentNotice}
-      initialQueueSummary={initialQueueSummary}
-      queueHeadline={queueHeadline}
-    />
-  );
+  return <CheckoutClient viewer={viewer} />;
 }

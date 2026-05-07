@@ -30,6 +30,25 @@ function getProductMeta(product: MenuProductSummary) {
   return formatMoney(firstVariant.price);
 }
 
+function PlusGlyph({ compact }: { compact: boolean }) {
+  return (
+    <span className={cn("relative block", compact ? "h-[15px] w-[15px]" : "h-[18px] w-[18px]")}>
+      <span
+        className={cn(
+          "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#fff7ef]",
+          compact ? "h-[2px] w-[14px]" : "h-[2.25px] w-[16px]",
+        )}
+      />
+      <span
+        className={cn(
+          "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#fff7ef]",
+          compact ? "h-[14px] w-[2px]" : "h-[16px] w-[2.25px]",
+        )}
+      />
+    </span>
+  );
+}
+
 export function ProductGridCard({
   product,
   onOpen,
@@ -76,14 +95,15 @@ export function ProductGridCard({
       <div className={cn("mt-auto px-1 pb-1", compact ? "pt-1.5" : "pt-2")}>
         <button
           type="button"
+          aria-label={`Добавить ${product.name}`}
           disabled={!product.available}
           onClick={() => onOpen(product)}
           className={cn(
-            "ml-auto flex items-center justify-center rounded-full bg-[#3f2a1d] font-light leading-none text-white transition hover:bg-[#302016] disabled:cursor-not-allowed disabled:bg-stone-300",
-            compact ? "h-8 w-[58px] text-[23px]" : "h-10 w-[74px] text-[28px]",
+            "ml-auto flex items-center justify-center rounded-full bg-[#c69a7d] shadow-[0_12px_26px_rgba(117,75,48,0.22)] transition hover:bg-[#bb8d70] disabled:cursor-not-allowed disabled:bg-stone-300 disabled:shadow-none",
+            compact ? "h-8 w-[58px]" : "h-10 w-[74px]",
           )}
         >
-          +
+          <PlusGlyph compact={compact} />
         </button>
       </div>
     </article>

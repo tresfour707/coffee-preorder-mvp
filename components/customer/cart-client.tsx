@@ -15,12 +15,10 @@ import {
 import { cn } from "@/lib/cn";
 import { formatMoney } from "@/lib/money";
 import { getProductMedia } from "@/lib/product-media";
-import type { CartLine, ProductSummary, PublicQueueSummary, ViewerSummary } from "@/lib/types";
+import type { CartLine, ProductSummary, ViewerSummary } from "@/lib/types";
 
 type CartClientProps = {
   viewer: ViewerSummary | null;
-  initialQueueSummary: PublicQueueSummary;
-  queueHeadline: string;
 };
 
 function TrashIcon() {
@@ -147,11 +145,7 @@ function getPositionsLabel(count: number) {
   return `${count} позиций`;
 }
 
-export function CartClient({
-  viewer,
-  initialQueueSummary,
-  queueHeadline,
-}: CartClientProps) {
+export function CartClient({ viewer }: CartClientProps) {
   const ownerKey = getCartOwnerKey(viewer?.id);
   const items = useCustomerCartStore(selectCartByOwner(ownerKey));
   const hasHydrated = useCustomerCartStore((state) => state.hasHydrated);
@@ -219,10 +213,7 @@ export function CartClient({
     return (
       <CustomerMobileShell
         viewer={viewer}
-        queueSummary={initialQueueSummary}
-        queueHeadline={queueHeadline}
-        queueClassName="mt-2 pb-5 pt-1"
-        contentClassName="mt-0"
+        contentClassName="mt-6"
         className="pb-28 pt-0"
         header={header}
       >
@@ -237,10 +228,7 @@ export function CartClient({
     return (
       <CustomerMobileShell
         viewer={viewer}
-        queueSummary={initialQueueSummary}
-        queueHeadline={queueHeadline}
-        queueClassName="mt-2 pb-5 pt-1"
-        contentClassName="mt-0"
+        contentClassName="mt-6"
         className="pb-28 pt-0"
         header={header}
       >
@@ -260,10 +248,7 @@ export function CartClient({
   return (
     <CustomerMobileShell
       viewer={viewer}
-      queueSummary={initialQueueSummary}
-      queueHeadline={queueHeadline}
-      queueClassName="mt-2 pb-5 pt-1"
-      contentClassName="mt-0"
+      contentClassName="mt-6"
       className="pb-36 pt-0"
       header={header}
     >
@@ -351,7 +336,7 @@ export function CartClient({
           </div>
           <Link
             href="/checkout"
-            className="rounded-full bg-[#3f2a1d] px-5 py-3 text-sm font-semibold text-white transition active:scale-[0.97]"
+            className="rounded-full bg-[#6b4a38] px-5 py-3 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(91,64,45,0.18)] transition hover:bg-[#5f4131] active:scale-[0.97]"
           >
             К оформлению
           </Link>

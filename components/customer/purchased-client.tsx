@@ -38,8 +38,8 @@ function SearchIcon() {
       strokeLinejoin="round"
       strokeWidth="2.2"
     >
-      <circle cx="10.5" cy="10.5" r="6.5" />
-      <path d="m16 16 5 5" />
+      <circle cx="10.75" cy="10.75" r="6.75" />
+      <path d="M15.75 15.75 20.5 20.5" />
     </svg>
   );
 }
@@ -56,8 +56,8 @@ function SmallSearchIcon() {
       strokeLinejoin="round"
       strokeWidth="2.2"
     >
-      <circle cx="10.5" cy="10.5" r="6.5" />
-      <path d="m16 16 5 5" />
+      <circle cx="10.75" cy="10.75" r="6.75" />
+      <path d="M15.75 15.75 20.5 20.5" />
     </svg>
   );
 }
