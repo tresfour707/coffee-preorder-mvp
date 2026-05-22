@@ -212,14 +212,10 @@ export function CheckoutClient({ viewer }: CheckoutClientProps) {
   }
 
   const header = (
-    <section className="rounded-[30px] border border-white/70 bg-[rgba(255,255,255,0.72)] px-5 py-5 shadow-[0_16px_34px_rgba(31,23,18,0.08)] backdrop-blur-[22px]">
-      <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-stone-400">
-        Аккаунт
-      </p>
-      <h1 className="mt-3 text-[30px] font-semibold leading-none tracking-tight text-stone-950">
-        {viewer.name}
+    <section className="relative flex min-h-12 items-center justify-center">
+      <h1 className="text-[30px] font-medium leading-none tracking-tight text-stone-950">
+        Оплата
       </h1>
-      <p className="mt-2 text-[15px] text-stone-500">{viewer.email}</p>
     </section>
   );
 
@@ -228,7 +224,7 @@ export function CheckoutClient({ viewer }: CheckoutClientProps) {
       <CustomerMobileShell
         viewer={viewer}
         className="pb-32 pt-0"
-        contentClassName="mt-5"
+        contentClassName="mt-6"
         header={header}
       >
         <div className="customer-soft-card px-5 py-6 text-sm text-stone-600">
@@ -243,7 +239,7 @@ export function CheckoutClient({ viewer }: CheckoutClientProps) {
       <CustomerMobileShell
         viewer={viewer}
         className="pb-32 pt-0"
-        contentClassName="mt-5"
+        contentClassName="mt-6"
         header={header}
       >
         <EmptyState
@@ -263,7 +259,7 @@ export function CheckoutClient({ viewer }: CheckoutClientProps) {
     <CustomerMobileShell
       viewer={viewer}
       className="pb-14 pt-0"
-      contentClassName="mt-5"
+      contentClassName="mt-6"
       header={header}
     >
       <div className="space-y-4">

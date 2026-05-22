@@ -18,10 +18,14 @@ import {
   buildMenuCategoryEntries,
   getMenuCategoryHref,
 } from "@/lib/menu-catalog";
+import { formatOrderNumber } from "@/lib/format";
+import { statusLabels } from "@/lib/labels";
+import { cn } from "@/lib/cn";
 import type {
   MenuProductSummary,
   ProductSummary,
   PublicQueueSummary,
+  UserOrderSummary,
   ViewerSummary,
 } from "@/lib/types";
 
@@ -46,14 +50,152 @@ function SearchIcon() {
 type MenuClientProps = {
   products: MenuProductSummary[];
   purchasedProducts: MenuProductSummary[];
+  trackableOrders: UserOrderSummary[];
   viewer: ViewerSummary | null;
   initialQueueSummary: PublicQueueSummary;
   queueHeadline: string;
 };
 
+function getOrderStatusTone(status: UserOrderSummary["status"]) {
+  switch (status) {
+    case "READY":
+      return {
+        dotClassName: "bg-[#6f9a61]",
+        textClassName: "text-[#456f42]",
+        chipClassName: "bg-[#e4f1df] text-[#456f42]",
+      };
+    case "PREPARING":
+      return {
+        dotClassName: "bg-[#8fa878]",
+        textClassName: "text-[#5f754f]",
+        chipClassName: "bg-[#e7efdd] text-[#5f754f]",
+      };
+    case "WAITING":
+      return {
+        dotClassName: "bg-[#c9a378]",
+        textClassName: "text-[#8a613a]",
+        chipClassName: "bg-[#f4e5d2] text-[#8a613a]",
+      };
+    case "CANCELLED":
+      return {
+        dotClassName: "bg-stone-400",
+        textClassName: "text-stone-500",
+        chipClassName: "bg-stone-200 text-stone-600",
+      };
+    default:
+      return {
+        dotClassName: "bg-stone-400",
+        textClassName: "text-stone-500",
+        chipClassName: "bg-[#f8f2ec] text-stone-600",
+      };
+  }
+}
+
+function getActiveOrdersLabel(count: number) {
+  const lastTwoDigits = count % 100;
+  const lastDigit = count % 10;
+
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 14) {
+    return `${count} активных`;
+  }
+
+  if (lastDigit === 1) {
+    return `${count} активный`;
+  }
+
+  return `${count} активных`;
+}
+
+function getOrderPriority(order: UserOrderSummary) {
+  if (order.status === "READY") {
+    return 0;
+  }
+
+  if (order.status === "PREPARING") {
+    return 1;
+  }
+
+  return 2;
+}
+
+function ActiveOrderTracker({
+  orders,
+}: {
+  orders: UserOrderSummary[];
+}) {
+  if (orders.length === 0) {
+    return null;
+  }
+
+  const sortedOrders = [...orders].sort((first, second) => {
+    const priorityDiff = getOrderPriority(first) - getOrderPriority(second);
+
+    if (priorityDiff !== 0) {
+      return priorityDiff;
+    }
+
+    const queueDiff = first.ordersAhead - second.ordersAhead;
+
+    if (queueDiff !== 0) {
+      return queueDiff;
+    }
+
+    return (
+      new Date(second.confirmedAt).getTime() - new Date(first.confirmedAt).getTime()
+    );
+  });
+  const [primaryOrder, ...otherOrders] = sortedOrders;
+  const statusTone = getOrderStatusTone(primaryOrder.status);
+  const hasMultipleOrders = otherOrders.length > 0;
+  const href = hasMultipleOrders ? "/orders/current" : `/order/${primaryOrder.id}`;
+
+  return (
+    <section className="mb-3 px-1">
+      <Link
+        href={href}
+        className="group flex min-h-[70px] items-center gap-4 rounded-full bg-[rgba(255,255,255,0.58)] px-5 py-3 text-stone-950 no-underline shadow-[0_14px_30px_rgba(31,23,18,0.065)] backdrop-blur-[22px] transition active:scale-[0.99]"
+      >
+        <span className="shrink-0 text-[23px] font-semibold leading-none tracking-tight text-stone-950">
+          {formatOrderNumber(primaryOrder.publicOrderNumber)}
+        </span>
+
+        <span className="min-w-0 flex-1">
+          <span className="flex min-w-0 items-center gap-2">
+            <span
+              className={cn("h-2 w-2 shrink-0 rounded-full", statusTone.dotClassName)}
+            />
+            <span
+              className={cn(
+                "truncate text-[17px] font-medium leading-none tracking-tight",
+                statusTone.textClassName,
+              )}
+            >
+              {statusLabels[primaryOrder.status]}
+            </span>
+          </span>
+        </span>
+
+        <span
+          className={cn(
+            "inline-flex shrink-0 rounded-full px-3 py-1.5 text-[13px] font-medium leading-none",
+            hasMultipleOrders ? "bg-[#f5eee8] text-stone-700" : statusTone.chipClassName,
+          )}
+        >
+          {hasMultipleOrders ? getActiveOrdersLabel(sortedOrders.length) : "Открыть"}
+        </span>
+
+        <span className="shrink-0 text-[26px] font-light leading-none text-stone-400 transition group-active:translate-x-0.5">
+          ›
+        </span>
+      </Link>
+    </section>
+  );
+}
+
 export function MenuClient({
   products,
   purchasedProducts,
+  trackableOrders,
   viewer,
   initialQueueSummary,
   queueHeadline,
@@ -88,6 +230,7 @@ export function MenuClient({
       queueClassName="mt-0 pb-7 pt-1"
       contentClassName="mt-0"
       className="pb-28 pt-0"
+      header={<ActiveOrderTracker orders={trackableOrders} />}
     >
       {purchasedProducts.length > 0 ? (
         <section className="mb-14">

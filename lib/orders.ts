@@ -265,6 +265,53 @@ export async function listOrdersForUser(viewerUserId: string): Promise<UserOrder
   });
 }
 
+export async function listTrackableOrdersForUser(
+  viewerUserId: string,
+): Promise<UserOrderSummary[]> {
+  const [orders, activeOrderIds] = await Promise.all([
+    prisma.order.findMany({
+      where: {
+        userId: viewerUserId,
+        source: OrderSource.ONLINE,
+        businessDay: getBusinessDay(),
+        status: {
+          in: [OrderStatus.WAITING, OrderStatus.PREPARING, OrderStatus.READY],
+        },
+        publicOrderNumber: {
+          not: null,
+        },
+        confirmedAt: {
+          not: null,
+        },
+      },
+      orderBy: [
+        {
+          confirmedAt: "desc",
+        },
+        {
+          createdAt: "desc",
+        },
+      ],
+      include: orderWithRelationsInclude,
+    }),
+    getActiveOrderIds(prisma),
+  ]);
+
+  return orders.map((order) => {
+    const details = serializeOrderDetails(order, activeOrderIds);
+
+    return {
+      id: details.id,
+      publicOrderNumber: details.publicOrderNumber,
+      status: details.status,
+      totalPrice: details.totalPrice,
+      confirmedAt: details.confirmedAt,
+      source: details.source,
+      ordersAhead: details.ordersAhead,
+    };
+  });
+}
+
 export async function listRecentlyPurchasedProductKeysForUser(
   viewerUserId: string,
 ): Promise<string[]> {

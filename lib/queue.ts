@@ -50,6 +50,7 @@ export function isActiveQueueStatus(status: OrderStatus) {
 export function serializeOrderItems(items: OrderItem[]): OrderItemSummary[] {
   return items.map((item) => ({
     id: item.id,
+    productId: item.productId,
     productName: item.productNameSnapshot,
     quantity: item.quantity,
     unitPrice: item.unitPriceSnapshot,

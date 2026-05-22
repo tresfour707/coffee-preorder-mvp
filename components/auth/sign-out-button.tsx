@@ -1,13 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 type SignOutButtonProps = {
   className?: string;
+  children?: ReactNode;
 };
 
-export function SignOutButton({ className }: SignOutButtonProps) {
+export function SignOutButton({ className, children }: SignOutButtonProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -32,7 +33,8 @@ export function SignOutButton({ className }: SignOutButtonProps) {
       disabled={isSubmitting}
       className={className}
     >
-      {isSubmitting ? "Выходим…" : "Выйти"}
+      {children}
+      <span>{isSubmitting ? "Выходим…" : "Выйти"}</span>
     </button>
   );
 }

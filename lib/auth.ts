@@ -14,17 +14,26 @@ export type AuthUser = {
   id: string;
   name: string;
   email: string;
+  birthDate: string | null;
+  gender: string | null;
+  phone: string | null;
 };
 
 function toAuthUser(user: {
   id: string;
   name: string;
   email: string;
+  birthDate: Date | null;
+  gender: string | null;
+  phone: string | null;
 }): AuthUser {
   return {
     id: user.id,
     name: user.name,
     email: user.email,
+    birthDate: user.birthDate?.toISOString() ?? null,
+    gender: user.gender,
+    phone: user.phone,
   };
 }
 
@@ -122,6 +131,9 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
           id: true,
           name: true,
           email: true,
+          birthDate: true,
+          gender: true,
+          phone: true,
         },
       },
     },

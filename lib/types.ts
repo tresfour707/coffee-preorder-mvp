@@ -13,6 +13,9 @@ export type ViewerSummary = {
   id: string;
   name: string;
   email: string;
+  birthDate: string | null;
+  gender: string | null;
+  phone: string | null;
 };
 
 export type ProductSummary = {
@@ -58,6 +61,7 @@ export type CartLine = {
 
 export type OrderItemSummary = {
   id: string;
+  productId: string | null;
   productName: string;
   quantity: number;
   unitPrice: number;

@@ -2,6 +2,7 @@ import { MenuClient } from "@/components/customer/menu-client";
 import { getCurrentUser } from "@/lib/auth";
 import {
   listRecentlyPurchasedProductKeysForUser,
+  listTrackableOrdersForUser,
   sortProductsByPurchasedKeys,
 } from "@/lib/orders";
 import { getAvailableProducts } from "@/lib/products";
@@ -15,9 +16,10 @@ export default async function MenuPage() {
     getCurrentUser(),
     getPublicQueueSummary(),
   ]);
-  const [queueHeadline, purchasedKeys] = await Promise.all([
+  const [queueHeadline, purchasedKeys, trackableOrders] = await Promise.all([
     getQueueHeadline(viewer?.id),
     viewer ? listRecentlyPurchasedProductKeysForUser(viewer.id) : [],
+    viewer ? listTrackableOrdersForUser(viewer.id) : [],
   ]);
   const { purchasedProducts } = sortProductsByPurchasedKeys(products, purchasedKeys);
 
@@ -25,6 +27,7 @@ export default async function MenuPage() {
     <MenuClient
       products={products}
       purchasedProducts={purchasedProducts}
+      trackableOrders={trackableOrders}
       viewer={viewer}
       initialQueueSummary={initialQueueSummary}
       queueHeadline={queueHeadline}

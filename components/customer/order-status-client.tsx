@@ -228,12 +228,7 @@ export function OrderStatusClient({
           </div>
         </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-3">
-          <MetricCard label="Сумма" value={formatMoney(order.totalPrice)} />
-          <MetricCard label="Создан" value={formatDateTime(order.confirmedAt)} />
-        </div>
-
-        <div className="mt-3 rounded-[24px] bg-[#f8f2ec] px-4 py-4">
+        <div className="mt-5 rounded-[24px] bg-[#f8f2ec] px-4 py-4">
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400">
@@ -244,6 +239,11 @@ export function OrderStatusClient({
               </p>
             </div>
           </div>
+        </div>
+
+        <div className="mt-3 grid grid-cols-2 gap-3">
+          <MetricCard label="Сумма" value={formatMoney(order.totalPrice)} />
+          <MetricCard label="Создан" value={formatDateTime(order.confirmedAt)} />
         </div>
       </section>
 
