@@ -52,7 +52,7 @@ export function SignInForm({ nextPath }: SignInFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="customer-soft-card-strong mx-auto w-full px-5 py-6"
+      className="customer-soft-card mx-auto w-full px-5 py-6"
     >
       <div>
         <p className="kicker text-stone-400">Demo account</p>
