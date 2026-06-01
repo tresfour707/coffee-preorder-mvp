@@ -24,20 +24,7 @@ export default async function SignInPage({
       : "/menu";
 
   return (
-    <CustomerMobileShell
-      viewer={null}
-      header={
-        <section className="customer-soft-card px-5 py-5">
-          <p className="kicker text-stone-400">Аккаунт</p>
-          <h1 className="mt-2 text-[36px] font-semibold leading-[0.94] tracking-tight text-stone-950">
-            Войти в аккаунт
-          </h1>
-          <p className="mt-3 max-w-[320px] text-sm leading-6 text-stone-600">
-            Лёгкий demo-login для тестирования нескольких пользователей и их заказов.
-          </p>
-        </section>
-      }
-    >
+    <CustomerMobileShell viewer={null}>
       <SignInForm nextPath={nextPath} />
     </CustomerMobileShell>
   );
