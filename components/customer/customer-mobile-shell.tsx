@@ -526,19 +526,15 @@ export function CustomerMobileShell({
               {!viewer ? (
                 <div className="flex min-h-[70vh] flex-col justify-center pb-8 pt-10 text-center">
                   <div className="mx-auto max-w-[290px]">
-                    <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-stone-400">
-                      Аккаунт
-                    </p>
-                    <h2 className="mt-4 text-[38px] font-semibold leading-[0.96] tracking-tight text-stone-950">
-                      Вход и регистрация
+                    <h2 className="text-[30px] font-medium leading-none tracking-tight text-stone-950">
+                      Авторизация
                     </h2>
-                    <p className="mt-4 text-sm leading-6 text-stone-600">
-                      Для online-заказов используем ваш demo-аккаунт: у него свои корзина,
-                      история и доступ к статусам заказов.
+                    <p className="mt-5 text-sm leading-6 text-stone-600">
+                      Войдите или создайте аккаунт, чтобы оформить заказ.
                     </p>
                   </div>
 
-                  <div className="mx-auto mt-8 flex w-full max-w-[282px] flex-col gap-3">
+                  <div className="mx-auto mt-9 flex w-full max-w-[282px] flex-col gap-3">
                     <Link
                       href="/sign-in?next=%2Fmenu"
                       onClick={() => setActivePanel(null)}

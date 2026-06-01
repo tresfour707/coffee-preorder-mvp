@@ -52,20 +52,15 @@ export function SignInForm({ nextPath }: SignInFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="customer-soft-card mx-auto w-full px-5 py-6"
+      className="customer-soft-card mx-auto w-full px-5 py-8"
     >
       <div>
-        <p className="kicker text-stone-400">Demo account</p>
-        <h2 className="mt-3 text-[30px] font-semibold leading-[0.98] tracking-tight text-stone-900">
+        <h2 className="text-[38px] font-semibold leading-[0.96] tracking-tight text-stone-900">
           Войти в аккаунт
         </h2>
-        <p className="mt-3 text-sm leading-6 text-stone-600">
-          Вход нужен для demo-сценария: у каждого пользователя свои корзина, заказы
-          и доступ к статусам только своих online-заказов.
-        </p>
       </div>
 
-      <div className="mt-6 space-y-4">
+      <div className="mt-8 space-y-4">
         <label className="block">
           <span className="text-sm font-medium text-stone-700">Email</span>
           <input
@@ -102,12 +97,12 @@ export function SignInForm({ nextPath }: SignInFormProps) {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="btn-primary mt-6 w-full disabled:cursor-wait disabled:bg-stone-400"
+        className="btn-primary mt-7 w-full disabled:cursor-wait disabled:bg-stone-400"
       >
         {isSubmitting ? "Входим…" : "Войти"}
       </button>
 
-      <p className="mt-4 text-sm text-stone-600">
+      <p className="mt-5 text-[15px] leading-none text-stone-600">
         Нет аккаунта?{" "}
         <Link
           href={`/sign-up?next=${encodeURIComponent(nextPath)}`}
